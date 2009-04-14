@@ -6,8 +6,8 @@ dotfiledir=$(basename $root)
 # Sync new dotfiles
 for dotfile in ${root}/.*; do
     filename=$(basename "$dotfile")
-    if [ "$filename" != . -a "$filename" != .. -a "$filename" != .git ]; then
-        if [ ! -e ~/$filename ]; then
+    if [[ "$filename" != . && "$filename" != .. && "$filename" != .git* && "$filename" != .*.sw? ]]; then
+        if [ ! -L ~/$filename ]; then
             echo "ln -sf $dotfiledir/$filename ~/"
         fi
     fi
