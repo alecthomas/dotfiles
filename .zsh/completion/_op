@@ -1,0 +1,5 @@
+#compdef op
+
+_op() {
+    compadd $(op -l | awk '{print $1}')
+}
