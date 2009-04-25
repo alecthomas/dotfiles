@@ -26,7 +26,7 @@ bindkey '^E' edit-command-line
 
 unsetopt beep
 
-#alias vi=vim
+alias vi=vim
 alias ls='ls --color=auto -F --ignore="*.pyc" --ignore="*~"'
 alias less='less -R'
 
