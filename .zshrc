@@ -10,6 +10,8 @@ colors
 # Format file completion with LS_COLORS
 eval $(dircolors -b)
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+# Ignore these extensions during tab completion
+fignore=('.pyc' '.sw?')
 
 PROMPT='[%n@%B%m%b:%~]'
 
