@@ -1,4 +1,4 @@
-export PATH=$PATH:~/bin
+export PATH=~/bin:$PATH
 export EDITOR=vim
 export VISUAL=vim
 export PAGER=less

@@ -80,16 +80,6 @@ expand-or-complete-with-dots() {
 }
 zle -N expand-or-complete-with-dots
 bindkey "^I" expand-or-complete-with-dots
-
-rationalise-dot() {
-  if [[ $LBUFFER = *.. ]]; then
-    LBUFFER+=/..
-  else
-    LBUFFER+=.
-  fi
-}
-zle -N rationalise-dot
-bindkey . rationalise-dot
 bindkey "^R" history-incremental-search-backward
 
 HISTSIZE=10000
@@ -110,6 +100,15 @@ setopt hist_save_no_dups
 setopt magic_equal_subst
 setopt nohup
 
+# Allow .'s after .. to refer to successively higher up directories
+preexec() {
+  setopt localoptions extendedglob
+  if [[ -o autocd && $1 = ...# ]]
+  then
+    eval function $1 \{ cd ..${${1#..}:gs@.@/..}\; unfunction $1 \}
+    alias -g $1="..${${1#..}:gs@.@/..}"
+  fi
+}
 
 READNULLCMD=${PAGER:-/bin/less}
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
