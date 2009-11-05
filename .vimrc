@@ -1,7 +1,7 @@
 " Reset defaults
 set all&
 
-if match(hostname(), "google.com")
+if match(hostname(), "google.com") != -1
   set runtimepath^=~/.vim/work
 else
   set runtimepath^=~/.vim/home
