@@ -7,6 +7,9 @@ else
   set runtimepath^=~/.vim/home
 endif
 
+" Enable snippeting
+set runtimepath+=~/.vim/ultisnips
+
 " Turn off annoying beeps
 set vb
 set noeb
