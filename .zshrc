@@ -129,6 +129,11 @@ f() {
   /usr/bin/find ${2-.} -name $1
 }
 
+# g <regex> [<path>
+g() {
+  /bin/grep -rIE $1 ${2-.}
+}
+
 if [ -r ~/.zshrc-local ]; then
   . ~/.zshrc-local
 fi
