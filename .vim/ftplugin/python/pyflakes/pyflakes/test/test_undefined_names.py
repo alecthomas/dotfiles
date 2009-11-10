@@ -24,8 +24,39 @@ class Test(harness.Test):
     def test_builtins(self):
         self.flakes('range(10)')
 
-    def test_magic_globals(self):
+
+    def test_magicGlobalsFile(self):
+        """
+        Use of the C{__file__} magic global should not emit an undefined name
+        warning.
+        """
         self.flakes('__file__')
+
+
+    def test_magicGlobalsBuiltins(self):
+        """
+        Use of the C{__builtins__} magic global should not emit an undefined
+        name warning.
+        """
+        self.flakes('__builtins__')
+
+
+    def test_magicGlobalsName(self):
+        """
+        Use of the C{__name__} magic global should not emit an undefined name
+        warning.
+        """
+        self.flakes('__name__')
+
+
+    def test_magicGlobalsPath(self):
+        """
+        Use of the C{__path__} magic global should not emit an undefined name
+        warning, if you refer to it from a file called __init__.py.
+        """
+        self.flakes('__path__', m.UndefinedName)
+        self.flakes('__path__', filename='package/__init__.py')
+
 
     def test_globalImportStar(self):
         '''Can't find undefined names with import *'''
@@ -91,6 +122,7 @@ class Test(harness.Test):
         def fun():
             a
             a = 2
+            return a
         ''', m.UndefinedLocal)
 
     def test_laterRedefinedGlobalFromNestedScope2(self):
@@ -106,6 +138,7 @@ class Test(harness.Test):
                 def fun2():
                     a
                     a = 2
+                    return a
         ''', m.UndefinedLocal)
 
 
@@ -124,6 +157,9 @@ class Test(harness.Test):
                     def c():
                         x
                         x = 3
+                        return x
+                    return x
+                return x
         ''', m.UndefinedLocal).messages[0]
         self.assertEqual(exc.message_args, ('x', 5))
 
@@ -139,6 +175,8 @@ class Test(harness.Test):
                 def fun2():
                     a
                     a = 1
+                    return a
+                return a
         ''', m.UndefinedLocal)
 
     def test_nestedClass(self):
@@ -161,7 +199,7 @@ class Test(harness.Test):
             class C:
                 bar = foo
             foo = 456
-
+            return foo
         f()
         ''', m.UndefinedName)
 

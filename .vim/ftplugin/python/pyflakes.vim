@@ -24,6 +24,7 @@ endif
 if !exists("b:did_python_init")
     python << EOF
 import vim
+import compiler
 import os.path
 import sys
 
@@ -57,7 +58,7 @@ def check(buffer):
         # TODO: use warnings filters instead of ignoring stderr
         old_stderr, sys.stderr = sys.stderr, blackhole()
         try:
-            tree = ast.parse(contents, filename)
+            tree = compiler.parse(contents)
         finally:
             sys.stderr = old_stderr
     except:
@@ -71,7 +72,7 @@ def check(buffer):
 
         return [SyntaxError(filename, lineno, offset, str(value))]
     else:
-        w = checker.Checker(tree, filename, builtins = builtins)
+        w = checker.Checker(tree, filename)
         w.messages.sort(key = attrgetter('lineno'))
         return w.messages
 
@@ -149,7 +150,7 @@ for w in check(vim.current.buffer):
     vim.command("let s:matchDict['message'] = '%s'" % vim_quote(w.message % w.message_args))
     vim.command("let b:matchedlines[" + str(w.lineno) + "] = s:matchDict")
 
-    if w.col is None or isinstance(w, SyntaxError):
+    if not hasattr(w, 'col') or w.col is None or isinstance(w, SyntaxError):
         # without column information, just highlight the whole line
         # (minus the newline)
         vim.command(r"let s:mID = matchadd('PyFlakes', '\%" + str(w.lineno) + r"l\n\@!')")
