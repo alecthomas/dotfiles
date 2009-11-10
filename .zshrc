@@ -35,7 +35,7 @@ alias less='less -R'
 # Set xterm title
 XTITLE="%n@%m:%~"
 precmd() {
-  [[ -t 1 ]] || return
+  test -t 1 || return
   case $TERM in
     xterm*|rxvt*)
       print -Pn "\e]2;$XTITLE\a"
@@ -47,10 +47,11 @@ precmd() {
   if [ $DIR != "~" -a $DIR != "/" ]; then
     local BASE=$(basename $DIR)
     DIR=$(dirname $DIR)
-    DIR=$(echo $DIR | sed -e 's#/\(.\)[^/]\+#/\1#g')
+    DIR=$(echo "$DIR" | sed -e 's#/\(.\)[^/]\+#/\1#g')
     if [ -n $BASE ]; then
         DIR=$DIR/$BASE
     fi
+    DIR=${DIR//\/\///}
   fi
   PROMPT="[%n@%B%m%b:$DIR]"
 }
@@ -122,6 +123,11 @@ alias help=run-help
 autoload -U compinit
 [[ -d "${ZDOTDIR:-$HOME}/.zcompdumps" ]] || mkdir -m 0700 -p "${ZDOTDIR:-$HOME}/.zcompdumps"
 compinit -d "${ZDOTDIR:-$HOME}/.zcompdumps/${HOST%%.*}-$ZSH_VERSION"
+
+# f <glob> [<path>]
+f() {
+  /usr/bin/find ${2-.} -name $1
+}
 
 if [ -r ~/.zshrc-local ]; then
   . ~/.zshrc-local
