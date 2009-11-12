@@ -18,8 +18,7 @@ for dotfile in ~/.*; do
     if [ -L "$dotfile" -a ! -e "$dotfile" ]; then
         link=$(readlink "$dotfile")
         if [[ $link == *$dotfiledir* ]]; then
-            echo "# $dotfile symlinked to missing $link"
-            echo "rm -f $dotfile"
+            echo "rm -f $dotfile   # symlinked to missing $link"
         fi
     fi
 done
