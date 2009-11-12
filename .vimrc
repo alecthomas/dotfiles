@@ -142,7 +142,10 @@ set wildmenu
 inoremap <Nul> <C-x><C-o>
 inoremap <C-Space> <C-x><C-o>
 
+" Default to using keyword completion
 let g:SuperTabDefaultCompletionType = "<C-X><C-N>"
+" Enable omnicomplete for Python
+autocmd Syntax python let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
 "let g:SuperTabDefaultCompletionTypeDiscovery = "&omnifunc:<C-X><C-O>,&useKeywordCompletion:<C-X><C-I>"
 
 let xml_use_xhtml = 1
@@ -159,7 +162,8 @@ highlight ExtraWhitespace cterm=NONE ctermbg=red guibg=red
 autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 " PySmell options and supertab integration
-set completeopt=menuone,longest,preview
+"set completeopt=menuone,longest,preview
+set completeopt=longest,menuone
 
 " Change to working directory of current buffer. Very useful.
 set autochdir
