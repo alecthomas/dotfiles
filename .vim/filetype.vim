@@ -4,6 +4,7 @@ if exists("did_load_filetypes")
 endif
 
 augroup filetypedetect
+  au! BufRead,BufNewFile *.go setfiletype go
   au! BufRead,BufNewFile *.as setfiletype javascript
   au! BufRead,BufNewFile *.json setfiletype json
   au! BufRead,BufNewFile *.re setfiletype reia

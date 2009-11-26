@@ -1,14 +1,14 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " AutoClose.vim - Automatically close pair of characters: ( with ), [ with ], { with }, etc.
-" Version: 1.1
+" Version: 1.4
 " Author: Thiago Alves <thiago.salves@gmail.com>
 " Maintainer: Thiago Alves <thiago.salves@gmail.com>
 " URL: http://thiagoalves.org
 " Licence: This script is released under the Vim License.
-" Last modified: 08/25/2008 
+" Last modified: 09/05/2008 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let s:debug = 1
+let s:debug = 0
 
 " check if script is already loaded
 if s:debug == 0 && exists("g:loaded_AutoClose")
@@ -69,20 +69,30 @@ function! s:IsForbidden(char)
 endfunction
 
 function! s:InsertPair(char)
+    let l:save_ve = &ve
+    set ve=all
+
     let l:next = s:GetNextChar()
     let l:result = a:char
     if s:running && !s:IsForbidden(a:char) && (l:next == "\0" || l:next !~ '\w')
         let l:result .= s:charsToClose[a:char] . "\<Left>"
     endif
+
+    exec "set ve=" . l:save_ve
     return l:result
 endfunction
 
 function! s:ClosePair(char)
+    let l:save_ve = &ve
+    set ve=all
+
     if s:running && s:GetNextChar() == a:char
         let l:result = "\<Right>"
     else
         let l:result = a:char
     endif
+
+    exec "set ve=" . l:save_ve
     return l:result
 endfunction
 
@@ -110,10 +120,16 @@ function! s:CheckPair(char)
 endfunction
 
 function! s:Backspace()
+    let l:save_ve = &ve
+    set ve=all
+
+    let l:result = "\<BS>"
     if s:running && s:IsEmptyPair()
-        return "\<BS>\<Del>"
+        let l:result .= "\<Del>"
     endif    
-    return "\<BS>"
+
+    exec "set ve=" . l:save_ve
+    return l:result
 endfunction
 
 function! s:ToggleAutoClose()
@@ -123,18 +139,6 @@ function! s:ToggleAutoClose()
     else
         echo "AutoClose OFF"
     endif
-endfunction
-
-function! s:SetVEAll()
-    let s:save_ve = &ve
-    set ve=all
-    return ""
-endfunction
-
-function! s:RestoreVE()
-    exec "set ve=" . s:save_ve
-    unlet s:save_ve
-    return ""
 endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -166,22 +170,14 @@ endif
 
 " create appropriate maps to defined open/close characters
 for key in keys(s:charsToClose)
-    if key == '"'
-        let open_func_arg = '"\""'
-        let close_func_arg = '"\""'
-    else
-        let open_func_arg = '"' . key . '"'
-        let close_func_arg = '"' . s:charsToClose[key] . '"'
-    endif 
-     
     if key == s:charsToClose[key]
-        exec "inoremap <silent> " . key . " <C-R>=<SID>SetVEAll()<CR><C-R>=<SID>CheckPair(" . open_func_arg . ")<CR><C-R>=<SID>RestoreVE()<CR>"
+        exec "inoremap <silent> " . key . " <C-R>=<SID>CheckPair(\"" . (key == '"' ? '\"' : key) . "\")<CR>"
     else
-        exec "inoremap <silent> " . s:charsToClose[key] . " <C-R>=<SID>SetVEAll()<CR><C-R>=<SID>ClosePair(" . close_func_arg . ")<CR><C-R>=<SID>RestoreVE()<CR>"
-        exec "inoremap <silent> " . key . " <C-R>=<SID>SetVEAll()<CR><C-R>=<SID>InsertPair(" . open_func_arg . ")<CR><C-R>=<SID>RestoreVE()<CR>"
+        exec "inoremap <silent> " . key . " <C-R>=<SID>InsertPair(\"" . key . "\")<CR>"
+        exec "inoremap <silent> " . s:charsToClose[key] . " <C-R>=<SID>ClosePair(\"" . s:charsToClose[key] . "\")<CR>"
     endif
 endfor
-exec "inoremap <silent> <BS> <C-R>=<SID>SetVEAll()<CR><C-R>=<SID>Backspace()<CR><C-R>=<SID>RestoreVE()<CR>"
+exec "inoremap <silent> <BS> <C-R>=<SID>Backspace()<CR>"
 
 " Define convenient commands
 command! AutoCloseOn :let s:running = 1

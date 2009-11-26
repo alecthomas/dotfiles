@@ -37,8 +37,8 @@ from operator import attrgetter
 
 class SyntaxError(messages.Message):
     message = 'could not compile: %s'
-    def __init__(self, filename, lineno, col, message):
-        messages.Message.__init__(self, filename, lineno, col)
+    def __init__(self, filename, lineno, message):
+        messages.Message.__init__(self, filename, lineno)
         self.message_args = (message,)
 
 class blackhole(object):
@@ -70,7 +70,7 @@ def check(buffer):
         if line.endswith("\n"):
             line = line[:-1]
 
-        return [SyntaxError(filename, lineno, offset, str(value))]
+        return [SyntaxError(filename, lineno, str(value))]
     else:
         w = checker.Checker(tree, filename)
         w.messages.sort(key = attrgetter('lineno'))
