@@ -89,6 +89,9 @@ noremap q? <C-l>
 
 syntax on
 
+" Set some formatoptions
+set formatoptions=tcrqn
+
 " Incremental search is good
 set incsearch
 set hlsearch
