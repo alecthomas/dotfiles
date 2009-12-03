@@ -100,14 +100,14 @@ function! s:BlockStarter(lnum, block_start_re)
 endfunction
 
 function s:InCommentSyntax(lnum, ccol)
-    return synIDattr(synIDtrans(synID(a:lnum, a:ccol - 1, 1)), "name") =~ 'Comment\|String'
+    return synIDattr(synIDtrans(synID(a:lnum, a:ccol, 1)), "name") =~ 'Comment\|String'
 endfunction
 
 " In a comment? This check is naive.
-function! InsideComment(lnum)
+function! s:InsideComment(lnum)
     let lnum = prevnonblank(a:lnum)
-    let line_start = match(getline(lnum), '\S')
-    let line_end = match(getline(lnum), '$')
+    let line_start = match(getline(lnum), '\S') + 1
+    let line_end = match(getline(lnum), '$') - 1
     if s:InCommentSyntax(lnum, line_start) && s:InCommentSyntax(lnum, line_end)
         return 1
     endif
@@ -121,7 +121,7 @@ function! GetPythonIndent(lnum)
         return 0
     endif
 
-    if InsideComment(a:lnum) == 1
+    if s:InsideComment(a:lnum) == 1
         return -1
     endif
 
