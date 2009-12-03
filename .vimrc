@@ -36,24 +36,36 @@ set nowrap
 set backupcopy=yes
 
 " ctrl-n = next file
-map <silent> <C-n> :bn<Enter>
+map <silent> <C-n> :bn<CR>
 " ctrl-p = previous file
-map <silent> <C-p> :bN<Enter>
+map <silent> <C-p> :bN<CR>
 
 " Insert current date at cursor position
-imap <silent> <C-d> <Esc>mm:r!date +\%Y-\%m-\%d<Enter>D`mp``dd``a
-imap <silent> <C-t> <Esc>mm:r!date +\%H:\%M:\%S<Enter>D`mp``dd``a
+imap <silent> <C-d> <Esc>mm:r!date +\%Y-\%m-\%d<CR>D`mp``dd``a
+imap <silent> <C-t> <Esc>mm:r!date +\%H:\%M:\%S<CR>D`mp``dd``a
 
 " Map U to 'redo', which I like better than U being 'undo changes to this line'
 map U <C-R>
 
+" FIXME This seems spectacularly hacky
+" Alt-c/Alt-shift-c comment/uncomment the selected region.
+" set <M-c>=c
+" set <M-C>=C
+autocmd FileType python,sh,ruby map <M-c> :s,^,#,<CR><C-l>
+autocmd FileType python,sh,ruby map <M-C> :s,^#,,<CR><C-l>
+
 " Alt-I/Alt-U indents and unindents respectively, the current block, excluding
 " the brace lines themselves
+" set <M-i>=i
+" set <M-u>=u
 map <M-i> mi>%`i<<`i%<<`i
 map <M-u> mi>>`i%>>`i<%`i
 
+" Indentation defaults
+set ts=2 sts=2 sw=2 et
+
 " No 'Press ENTER...' message when using man
-map K K<Enter>
+map K K<CR>
 
 " Abbreviate status messages
 set shortmess=a
@@ -69,7 +81,7 @@ let g:detectindent_preferred_indent = 4
 autocmd BufReadPost * :DetectIndent
 
 " Filetypes where we want 2-character spaces
-autocmd FileType css,rst,javascript,htmldjango,xhtml,html,xml,mail :set ts=2 sw=2 sts=2
+autocmd FileType css,rst,javascript,htmldjango,xhtml,html,xml,mail :set ts=2 sw=2 sts=2 et
 
 " Get rid of this exceptionally annoying 'feature'
 noremap q: <C-l>
@@ -77,13 +89,16 @@ noremap q? <C-l>
 
 syntax on
 
+" Set some formatoptions
+set formatoptions=tcrqn
+
 " Incremental search is good
 set incsearch
 set hlsearch
 hi MatchParen cterm=NONE ctermfg=LightGreen ctermbg=NONE
 
 " Disable highlighted search on redraw
-map <silent> <C-l> :nohlsearch<Enter>:redraw!<Enter>
+map <silent> <C-l> :nohlsearch<CR>:redraw!<CR>
 
 " ??
 autocmd Syntax * syntax sync fromstart
@@ -138,3 +153,18 @@ set completeopt=longest,menuone
 
 " Change to working directory of current buffer. Very useful.
 set autochdir
+
+" Configure syntastic code checking
+let g:syntastic_enable_signs=1
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+
+" Try to keep 2 lines of context when scrolling
+set scrolloff=2
+
+" Round shifting to nearest shiftwidth
+set shiftround
+
+" Insert blanks according to shiftwidth
+set smarttab

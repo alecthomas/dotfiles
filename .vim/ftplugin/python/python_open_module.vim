@@ -32,6 +32,7 @@ cmd_open_in_tab = 'noremap <buffer> %s :py pymoduleopner.open_in_tab()<CR>' % ke
 vim.command(cmd_open)
 vim.command(cmd_open_in_win)
 vim.command(cmd_open_in_tab)
+vim.command("map <C-t> <C-o>")
 
 eof
 " }}}

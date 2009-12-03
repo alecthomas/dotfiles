@@ -14,7 +14,7 @@ setlocal expandtab
 setlocal nolisp
 setlocal autoindent
 setlocal indentexpr=GetPythonIndent(v:lnum)
-setlocal indentkeys=!^F,o,O,<:>,0),0],0},=elif,=except
+setlocal indentkeys=!^F,o,O,<:>,0),0],0},=elif,=except,0#
 
 let s:maxoff = 50
 
@@ -98,14 +98,33 @@ function! s:BlockStarter(lnum, block_start_re)
     endwhile
     return -1
 endfunction
-                
+
+function s:InCommentSyntax(lnum, ccol)
+    return synIDattr(synIDtrans(synID(a:lnum, a:ccol, 1)), "name") =~ 'Comment\|String'
+endfunction
+
+" In a comment? This check is naive.
+function! s:InsideComment(lnum)
+    let lnum = prevnonblank(a:lnum)
+    let line_start = match(getline(lnum), '\S') + 1
+    let line_end = match(getline(lnum), '$') - 1
+    if s:InCommentSyntax(lnum, line_start) && s:InCommentSyntax(lnum, line_end)
+        return 1
+    endif
+    return 0
+endfunction
+
 function! GetPythonIndent(lnum)
 
     " First line has indent 0
     if a:lnum == 1
         return 0
     endif
-    
+
+    if s:InsideComment(a:lnum) == 1
+        return -1
+    endif
+
     " If we can find an open parenthesis/bracket/brace, line up with it.
     call cursor(a:lnum, 1)
     let parlnum = s:SearchParensPair()
