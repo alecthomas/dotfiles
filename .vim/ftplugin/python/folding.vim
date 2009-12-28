@@ -12,6 +12,8 @@ map <buffer> <C-f> :call ToggleFold()<CR>
 
 let b:folded = 1
 
+hi Folded     gui=bold cterm=bold guifg=cyan ctermfg=cyan guibg=NONE ctermbg=NONE
+
 function! ToggleFold()
   if b:folded == 0
     exec "normal! zM"
