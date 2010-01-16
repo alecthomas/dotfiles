@@ -1,3 +1,4 @@
+#!/bin/zsh
 if [ -f /etc/profile ]; then
   source /etc/profile
 fi
@@ -7,9 +8,6 @@ export FPATH=~/.zsh/completion:$FPATH
 autoload colors zsh/terminfo
 colors
 
-# Format file completion with LS_COLORS
-eval $(dircolors -b)
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 # Ignore these extensions during tab completion
 fignore=('.pyc' '.sw?')
 
@@ -126,14 +124,18 @@ compinit -d "${ZDOTDIR:-$HOME}/.zcompdumps/${HOST%%.*}-$ZSH_VERSION"
 
 # f <glob> [<path>]
 f() {
-  /usr/bin/find ${2-.} -name $1
+  find ${2-.} -name $1
 }
 
 # g <regex> [<path>
 g() {
-  /bin/grep -rIE $1 ${2-.}
+  grep -rIE $1 ${2-.}
 }
 
-if [ -r ~/.zshrc-local ]; then
-  . ~/.zshrc-local
+if [ -r ~/.zsh/$(uname).zshrc ]; then
+	. ~/.zsh/$(uname).zshrc
+fi
+
+if [ -r ~/.zsh/local.zshrc ]; then
+  . ~/.zsh/local.zshrc
 fi

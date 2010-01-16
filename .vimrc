@@ -8,7 +8,11 @@ else
 endif
 
 " Enable snippeting
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 set runtimepath+=~/.vim/ultisnips
+
 
 " Turn off annoying beeps
 set vb
@@ -152,7 +156,7 @@ autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\t/
 set completeopt=longest,menuone
 
 " Change to working directory of current buffer. Very useful.
-set autochdir
+" set autochdir
 
 " Configure syntastic code checking
 let g:syntastic_enable_signs=1
@@ -168,3 +172,13 @@ set shiftround
 
 " Insert blanks according to shiftwidth
 set smarttab
+
+" Tab traversal
+map <silent> <M-D-Right> :tabnext<Enter>
+map <silent> <M-D-Left> :tabprevious<Enter>
+
+" Set colorscheme
+colorscheme swapoff
+
+" Disable toolbar
+set go-=T
