@@ -99,7 +99,7 @@ function! s:BlockStarter(lnum, block_start_re)
     return -1
 endfunction
 
-function s:InCommentSyntax(lnum, ccol)
+function! s:InCommentSyntax(lnum, ccol)
     return synIDattr(synIDtrans(synID(a:lnum, a:ccol, 1)), "name") =~ 'Comment\|String'
 endfunction
 
