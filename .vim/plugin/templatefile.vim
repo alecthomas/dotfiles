@@ -136,6 +136,6 @@ endfun
 
 " Modeline {{{
 " vim:set ts=4:
-" vim600:fdm=marker fdl=0 fdc=3 vb t_vb=:
+" vim600:fdm=marker fdl=0 fdc=3 vb
 " }}}
 

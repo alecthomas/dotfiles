@@ -75,7 +75,11 @@ map K K<CR>
 set shortmess=a
 
 " Use insert key to toggle paste mode
-set pastetoggle=<Ins>
+if has('gui_macvim')
+  set pastetoggle=<Help>
+else
+  set pastetoggle=<Ins>
+endif
 
 " Filetypes that need real tabs
 autocmd FileType make :set ts=4 noet nolist
@@ -174,6 +178,9 @@ set shiftround
 set smarttab
 
 " Tab traversal
+map <silent> <Tab> :wincmd w<Enter>
+map <silent> <C-Tab> :tabnext<Enter>
+map <silent> <C-S-Tab> :tabprevious<Enter>
 map <silent> <M-D-Right> :tabnext<Enter>
 map <silent> <M-D-Left> :tabprevious<Enter>
 
