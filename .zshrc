@@ -133,7 +133,7 @@ g() {
 }
 
 if [ -r ~/.zsh/$(uname).zshrc ]; then
-	. ~/.zsh/$(uname).zshrc
+  . ~/.zsh/$(uname).zshrc
 fi
 
 if [ -r ~/.zsh/local.zshrc ]; then
