@@ -8,7 +8,7 @@ if exists("syntax_on")
   syntax reset
 endif
 
-let g:colors_name = "kestrel"
+let g:colors_name = "swapoff"
 
 hi Normal     ctermfg=Gray guifg=Gray guibg=black gui=NONE cterm=NONE
 hi Comment    guifg=DarkCyan ctermfg=DarkCyan
@@ -20,13 +20,13 @@ hi PreProc    guifg=LightGreen ctermfg=LightGreen
 hi Type       guifg=White ctermfg=White
 hi Underlined gui=underline cterm=underline guifg=LightBlue ctermfg=LightBlue
 hi Ignore     guifg=Black ctermfg=Black
-hi Error      guifg=White ctermfg=White guibg=Red
+hi Error      guifg=White ctermfg=White ctermbg=Red guibg=Red
 hi Todo       guifg=Black ctermfg=Black guibg=Yellow
 hi Search     gui=bold,underline cterm=bold,underline ctermfg=NONE guifg=NONE guibg=NONE ctermbg=NONE
 hi Folded     gui=bold cterm=bold guifg=cyan ctermfg=cyan guibg=NONE ctermbg=NONE
 hi String     guifg=Cyan ctermfg=Cyan
 hi Number     guifg=LightYellow ctermfg=LightYellow
-hi MatchParen guifg=LightGreen ctermfg=LightGreen
+hi MatchParen guifg=LightGreen ctermfg=LightGreen gui=bold guibg=NONE ctermbg=NONE
 hi SpecialKey guifg=LightRed ctermfg=LightRed
 
 " Links
