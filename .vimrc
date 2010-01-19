@@ -178,11 +178,14 @@ set shiftround
 set smarttab
 
 " Tab traversal
-map <silent> <Tab> :wincmd w<Enter>
-map <silent> <C-Tab> :tabnext<Enter>
-map <silent> <C-S-Tab> :tabprevious<Enter>
-map <silent> <M-D-Right> :tabnext<Enter>
-map <silent> <M-D-Left> :tabprevious<Enter>
+map <silent> <Tab> :wincmd w<CR>
+map <silent> <C-Tab> :tabnext<CR>
+map <silent> <C-S-Tab> :tabprevious<CR>
+map <silent> <M-D-Right> :tabnext<CR>
+map <silent> <M-D-Left> :tabprevious<CR>
+
+" Nerd tree
+map <silent> <F2> :NERDTreeToggle<CR>
 
 " Set colorscheme
 colorscheme swapoff
