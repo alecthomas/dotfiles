@@ -24,7 +24,6 @@ endif
 if !exists("b:did_python_init")
     python << EOF
 import vim
-import compiler
 import os.path
 import sys
 
@@ -35,10 +34,10 @@ sys.path.insert(0, scriptdir)
 from pyflakes import checker, ast, messages
 from operator import attrgetter
 
-class InvalidSyntax(messages.Message):
+class SyntaxError(messages.Message):
     message = 'could not compile: %s'
-    def __init__(self, filename, lineno, message):
-        messages.Message.__init__(self, filename, lineno)
+    def __init__(self, filename, lineno, col, message):
+        messages.Message.__init__(self, filename, lineno, col)
         self.message_args = (message,)
 
 class blackhole(object):
@@ -46,7 +45,11 @@ class blackhole(object):
 
 def check(buffer):
     filename = buffer.name
-    contents = '\n'.join(buffer[:])
+    contents = '\n'.join(buffer[:]) + '\n'
+
+    vimenc = vim.eval('&encoding')
+    if vimenc:
+        contents = contents.decode(vimenc)
 
     builtins = []
     try:
@@ -58,21 +61,21 @@ def check(buffer):
         # TODO: use warnings filters instead of ignoring stderr
         old_stderr, sys.stderr = sys.stderr, blackhole()
         try:
-            tree = compiler.parse(contents)
+            tree = ast.parse(contents, filename)
         finally:
             sys.stderr = old_stderr
     except:
         try:
             value = sys.exc_info()[1]
-            lineno, _, line = value[1][1:]
+            lineno, offset, line = value[1][1:]
         except IndexError:
-            lineno, line = 1, ''
+            lineno, offset, line = 1, 0, ''
         if line.endswith("\n"):
             line = line[:-1]
 
-        return [InvalidSyntax(filename, lineno, str(value))]
+        return [SyntaxError(filename, lineno, offset, str(value))]
     else:
-        w = checker.Checker(tree, filename)
+        w = checker.Checker(tree, filename, builtins = builtins)
         w.messages.sort(key = attrgetter('lineno'))
         return w.messages
 
@@ -115,7 +118,6 @@ noremap <buffer><silent> dd dd:PyflakesUpdate<CR>
 noremap <buffer><silent> dw dw:PyflakesUpdate<CR>
 noremap <buffer><silent> u u:PyflakesUpdate<CR>
 noremap <buffer><silent> <C-R> <C-R>:PyflakesUpdate<CR>
-"noremap <buffer><silent> <C-L> <C-L>:PyflakesUpdate<CR>
 
 " WideMsg() prints [long] message up to (&columns-1) length
 " guaranteed without "Press Enter" prompt.
@@ -150,7 +152,15 @@ for w in check(vim.current.buffer):
     vim.command("let s:matchDict['lineNum'] = " + str(w.lineno))
     vim.command("let s:matchDict['message'] = '%s'" % vim_quote(w.message % w.message_args))
     vim.command("let b:matchedlines[" + str(w.lineno) + "] = s:matchDict")
-    vim.command(r"let s:mID = matchadd('PyFlakes', '\%" + str(w.lineno) + r"l\n\@!')")
+
+    if w.col is None or isinstance(w, SyntaxError):
+        # without column information, just highlight the whole line
+        # (minus the newline)
+        vim.command(r"let s:mID = matchadd('PyFlakes', '\%" + str(w.lineno) + r"l\n\@!')")
+    else:
+        # with a column number, highlight the first keyword there
+        vim.command(r"let s:mID = matchadd('PyFlakes', '^\%" + str(w.lineno) + r"l\_.\{-}\zs\k\+\k\@!\%>" + str(w.col) + r"c')")
+
     vim.command("call add(b:matched, s:matchDict)")
 EOF
         let b:cleared = 0
