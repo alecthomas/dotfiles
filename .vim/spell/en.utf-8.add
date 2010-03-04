@@ -11,3 +11,8 @@ plugins
 templating
 CorpDB
 Kerberos
+backend
+UI
+summarisation
+localhost
+API

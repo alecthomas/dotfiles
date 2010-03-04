@@ -185,6 +185,7 @@ map <silent> <M-D-Right> :tabnext<CR>
 map <silent> <M-D-Left> :tabprevious<CR>
 
 " Nerd tree
+let NERDTreeQuitOnOpen=1
 map <silent> <F2> :NERDTreeToggle<CR>
 
 " Set colorscheme

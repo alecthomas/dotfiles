@@ -29,6 +29,13 @@ function! s:GetNextChar()
     return strpart(getline('.'), col('.')-1, 1)
 endfunction
 
+function! s:GetNextCharN(nth)
+    if col('$') < col('.') + a:nth
+        return "\0"
+    endif
+    return strpart(getline('.'), col('.')-1+a:nth, 1)
+endfunction
+
 function! s:GetPrevChar()
     if col('.') == 1
         return "\0"
@@ -83,6 +90,9 @@ function! s:InsertPair(char)
 endfunction
 
 function! s:ClosePair(char)
+    if a:char == "\0"
+        return ""
+    endif
     let l:save_ve = &ve
     set ve=all
 
@@ -132,6 +142,38 @@ function! s:Backspace()
     return l:result
 endfunction
 
+function! s:Backword()
+    let l:save_ve = &ve
+    set ve=all
+
+    let l:result = "\<C-W>"
+    if s:running && s:IsEmptyPair()
+        let l:result .= "\<Del>"
+    endif    
+
+    exec "set ve=" . l:save_ve
+    return l:result
+endfunction
+
+function! s:StrLen(str)
+    return strlen(substitute(a:str, '.', 'x', 'g'))
+endfunction
+
+function! s:CloseAndInsert(char)
+    let l:offset = 0
+    let l:result = ""
+
+    if s:running && !s:IsForbidden(a:char)
+        let l:closepair = s:ClosePair(s:GetNextChar())
+        while l:closepair != ""
+            let l:result .= l:closepair
+            let l:offset += 1
+            let l:closepair = s:ClosePair(s:GetNextCharN(l:offset))
+        endwhile
+    endif
+    return l:result . a:char
+endfunction
+
 function! s:ToggleAutoClose()
     let s:running = !s:running
     if s:running
@@ -168,6 +210,14 @@ else
     let s:running = 1
 endif
 
+" let user define keys that will close all and insert after
+if exists("g:AutoCloseAndInsert") && type(g:AutoCloseAndInsert) == type([])
+    let s:autoCloseCharacters = g:AutoCloseAndInsert
+    unlet g:AutoCloseAndInsert
+else
+    let s:autoCloseCharacters = []
+endif
+
 " create appropriate maps to defined open/close characters
 for key in keys(s:charsToClose)
     if key == s:charsToClose[key]
@@ -178,6 +228,11 @@ for key in keys(s:charsToClose)
     endif
 endfor
 exec "inoremap <silent> <BS> <C-R>=<SID>Backspace()<CR>"
+exec "inoremap <silent> <C-W> <C-R>=<SID>Backword()<CR>"
+
+for key in s:autoCloseCharacters
+    exec "inoremap <silent> " . key . " <C-R>=<SID>CloseAndInsert(\"" . escape(key, "\"\\") . "\")<CR>"
+endfor
 
 " Define convenient commands
 command! AutoCloseOn :let s:running = 1

@@ -3,6 +3,10 @@ if [ -f /etc/profile ]; then
   source /etc/profile
 fi
 
+# Use completion cache
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
 export FPATH=~/.zsh/completion:$FPATH
 
 autoload colors zsh/terminfo

@@ -140,8 +140,8 @@ def vimcomplete(context,match):
 
 class Completer(object):
     def __init__(self):
-       self.compldict = {}
-       self.parser = PyParser()
+        self.compldict = {}
+        self.parser = PyParser()
 
     def evalsource(self,text,line=0):
         sc = self.parser.parse(text,line)
