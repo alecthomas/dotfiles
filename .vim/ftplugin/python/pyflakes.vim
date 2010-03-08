@@ -32,6 +32,7 @@ import sys
 scriptdir = os.path.join(os.path.dirname(vim.eval('expand("<sfile>")')), 'pyflakes')
 sys.path.insert(0, scriptdir)
 
+import pep8
 from pyflakes import checker, ast, messages
 from operator import attrgetter
 
@@ -44,9 +45,22 @@ class InvalidSyntax(messages.Message):
 class blackhole(object):
     write = flush = lambda *a, **k: None
 
+class SilentPep8(pep8.Checker):
+    def __init__(self, filename, buffer, messages):
+        super(SilentPep8, self).__init__(None)
+        self.filename = filename
+        self.lines = buffer
+        self._all_messages = messages
+
+    def report_error(self, line_number, offset, text, check):
+        message = messages.Message(self.filename, line_number)
+        message.message = text
+        self._all_messages.append(message)
+
 def check(buffer):
     filename = buffer.name
     contents = '\n'.join(buffer[:])
+    pep8.process_options([filename])
 
     builtins = []
     try:
@@ -73,6 +87,9 @@ def check(buffer):
         return [InvalidSyntax(filename, lineno, str(value))]
     else:
         w = checker.Checker(tree, filename)
+        lines = [line + '\n' for line in buffer]
+        p8 = SilentPep8(filename, lines, w.messages)
+        p8.check_all()
         w.messages.sort(key = attrgetter('lineno'))
         return w.messages
 

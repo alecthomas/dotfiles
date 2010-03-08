@@ -4,5 +4,5 @@ set keywordprg=pydoc
 let python_highlight_all=1
 let python_slow_sync=1
 
-" Highlight 81st character as an error (PEP-8)
-match ErrorMsg /\%<82v.\%>81v/
+" Highlight 80th character as an error (PEP-8 expects max 79)
+match ErrorMsg /\%<82v.\%>80v/
