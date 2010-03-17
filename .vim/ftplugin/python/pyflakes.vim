@@ -21,6 +21,10 @@ if !exists('g:pyflakes_builtins')
     let g:pyflakes_builtins = []
 endif
 
+if !exists('g:pyflakes_pep8_enabled')
+  let g:pyflakes_pep8_enabled = 1
+endif
+
 if !exists("b:did_python_init")
     python << EOF
 import vim
@@ -63,8 +67,10 @@ def check(buffer):
     pep8.process_options([filename])
 
     builtins = []
+    pep8_enabled = 1
     try:
         builtins = eval(vim.eval('string(g:pyflakes_builtins)'))
+        pep8_enabled = int(vim.eval('g:pyflakes_pep8_enabled'))
     except Exception:
         pass
 
@@ -88,8 +94,9 @@ def check(buffer):
     else:
         w = checker.Checker(tree, filename)
         lines = [line + '\n' for line in buffer]
-        p8 = SilentPep8(filename, lines, w.messages)
-        p8.check_all()
+        if pep8_enabled:
+          p8 = SilentPep8(filename, lines, w.messages)
+          p8.check_all()
         w.messages.sort(key = attrgetter('lineno'))
         return w.messages
 
