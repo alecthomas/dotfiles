@@ -15,7 +15,7 @@ if !exists('b:genshi_type')
   endif
 endif
 if 'html' == b:genshi_type
-    doau Syntax xhtml
+    doau Syntax html
 elseif 'xml' == b:genshi_type
     doau Syntax xml
 endif

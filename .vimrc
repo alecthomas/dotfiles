@@ -51,20 +51,6 @@ imap <silent> <C-t> <Esc>mm:r!date +\%H:\%M:\%S<CR>D`mp``dd``a
 " Map U to 'redo', which I like better than U being 'undo changes to this line'
 map U <C-R>
 
-" FIXME This seems spectacularly hacky
-" Alt-c/Alt-shift-c comment/uncomment the selected region.
-" set <M-c>=c
-" set <M-C>=C
-autocmd FileType python,sh,ruby map <M-c> :s,^,#,<CR><C-l>
-autocmd FileType python,sh,ruby map <M-C> :s,^#,,<CR><C-l>
-
-" Alt-I/Alt-U indents and unindents respectively, the current block, excluding
-" the brace lines themselves
-" set <M-i>=i
-" set <M-u>=u
-map <M-i> mi>%`i<<`i%<<`i
-map <M-u> mi>>`i%>>`i<%`i
-
 " Indentation defaults
 set ts=2 sts=2 sw=2 et
 
@@ -77,6 +63,7 @@ set shortmess=a
 " Use insert key to toggle paste mode
 if has('gui_macvim')
   set pastetoggle=<Help>
+  set guifont=Consolas:h15
 else
   set pastetoggle=<Ins>
 endif
@@ -96,6 +83,7 @@ noremap q: <C-l>
 noremap q? <C-l>
 
 syntax on
+
 
 " Set some formatoptions
 set formatoptions=tcrqn

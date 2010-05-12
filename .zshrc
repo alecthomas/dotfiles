@@ -55,8 +55,12 @@ precmd() {
     fi
     DIR=${DIR//\/\///}
   fi
-  PROMPT="[%n@%B%m%b:$DIR]"
+  psvar[1]=$DIR
+  psvar[2]=$#jobstates
+  test $psvar[2] -eq 0 && psvar[2]=()
 }
+
+PROMPT="%(2v:<+%2v>:)[%n@%B%m%b:%1v]"
 
 which todo > /dev/null 2>&1
 HAVE_TODO=$?
@@ -128,7 +132,7 @@ compinit -d "${ZDOTDIR:-$HOME}/.zcompdumps/${HOST%%.*}-$ZSH_VERSION"
 
 # f <glob> [<path>]
 f() {
-  find ${2-.} -name $1
+  find ${2-.} -name \*${1-\*}\*
 }
 
 # g <regex> [<path>
