@@ -132,12 +132,12 @@ compinit -d "${ZDOTDIR:-$HOME}/.zcompdumps/${HOST%%.*}-$ZSH_VERSION"
 
 # f <glob> [<path>]
 f() {
-  find ${2-.} -name \*${1-\*}\*
+  find ${2-.} -iname \*${1-\*}\*
 }
 
-# g <regex> [<path>
+# g <regex> [<path>]
 g() {
-  grep -rIE $1 ${2-.}
+  grep -irIE $1 ${2-.}
 }
 
 if [ -r ~/.zsh/$(uname).zshrc ]; then
