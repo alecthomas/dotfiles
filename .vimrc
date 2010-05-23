@@ -68,6 +68,10 @@ else
   set pastetoggle=<Ins>
 endif
 
+" XXX This should be something else on non-Mac platforms
+let pyref_browser='/usr/bin/open'
+let pyref_mapping='K'
+
 " Filetypes that need real tabs
 autocmd FileType make :set ts=4 noet nolist
 " Defaults for indentation detection
@@ -178,6 +182,7 @@ map <silent> <F2> :NERDTreeToggle<CR>
 
 " Set colorscheme
 colorscheme swapoff
+
 
 " Disable toolbar
 set go-=T
