@@ -1,0 +1,14 @@
+[color]
+  branch = auto
+  diff = auto
+  status = auto
+
+[core]
+	excludesfile = ~/.gitignorerc
+[user]
+	name = Alec Thomas
+	email = alec@swapoff.org
+[sendemail]
+	smtpserver = smtp.gmail.com
+	smtpuser = alec@swapoff.org
+	smtpencryption = ssl

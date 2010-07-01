@@ -1,4 +1,5 @@
 history
+*.pyc
 .vim/work
 .vim/doc/tags
 .zsh/history*

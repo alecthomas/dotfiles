@@ -1,0 +1,8 @@
+.coverage
+.venv
+*.pyc
+.*.sw?
+nosetests.out
+*.db
+*.egg-info
+dist/
