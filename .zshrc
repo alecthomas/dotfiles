@@ -3,6 +3,12 @@ if [ -f /etc/profile ]; then
   source /etc/profile
 fi
 
+# Global aliases
+alias -g L='|less'
+
+# Use "run-help <builtin>" for help on zsh commands
+autoload run-help
+
 # Use completion cache
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
@@ -27,6 +33,9 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^E' edit-command-line
 
+# Automatically quote meta-characters in URLs!
+autoload -U url-quote-magic
+zle -N self-insert url-quote-magic
 
 unsetopt beep
 
@@ -92,20 +101,28 @@ bindkey "^R" history-incremental-search-backward
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.zsh/history
-setopt auto_cd
-setopt append_history
-setopt inc_append_history
-setopt extended_history
-setopt hist_find_no_dups
-setopt hist_ignore_all_dups
-setopt hist_reduce_blanks
-setopt hist_ignore_space
-setopt hist_no_store
-setopt hist_no_functions
-setopt no_hist_beep
-setopt hist_save_no_dups
-setopt magic_equal_subst
-setopt nohup
+
+# ZSH options
+setopt auto_cd \
+  auto_pushd \
+  auto_resume \
+  append_history \
+  complete_in_word \
+  inc_append_history \
+  extended_history \
+  hist_find_no_dups \
+  hist_ignore_all_dups \
+  hist_reduce_blanks \
+  hist_ignore_space \
+  hist_no_store \
+  hist_no_functions \
+  no_hist_beep \
+  hist_save_no_dups \
+  magic_equal_subst \
+  nohup \
+  pushd_ignore_dups \
+  pushd_silent \
+  pushd_to_home
 
 # Allow .'s after .. to refer to successively higher up directories
 preexec() {
