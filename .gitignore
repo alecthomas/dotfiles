@@ -4,3 +4,4 @@ history
 .vim/doc/tags
 .zsh/history*
 .zsh/local.zshrc
+.ipython/db
