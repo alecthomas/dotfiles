@@ -84,7 +84,7 @@ augroup END
 
 function! s:DefineMappings()
   let command = '%s <silent> <buffer> %s %s:call <Sid>PyRef()<CR>'
-  execute printf(command, 'inoremap', g:pyref_mapping, '<C-O>')
+  " execute printf(command, 'inoremap', g:pyref_mapping, '<C-O>')
   execute printf(command, 'nnoremap', g:pyref_mapping, '')
 endfunction
 

@@ -1,10 +1,8 @@
 " Reset defaults
 set all&
 
-if match(hostname(), "google.com") != -1
-  set runtimepath^=~/.vim/work
-else
-  set runtimepath^=~/.vim/home
+if filereadable(expand('~/.vimrc.local'))
+  so ~/.vimrc.local
 endif
 
 " Enable snippeting
@@ -131,7 +129,8 @@ inoremap <C-Space> <C-x><C-o>
 " Default to using keyword completion
 let g:SuperTabDefaultCompletionType = "<C-X><C-N>"
 " Enable omnicomplete for Python
-autocmd Syntax python let g:SuperTabDefaultCompletionType = "<C-X><C-N>"
+autocmd FileType python setlocal omnifunc=pysmell#Complete
+autocmd FileType python let g:SuperTabDefaultCompletionType = "<C-X><C-N>"
 "let g:SuperTabDefaultCompletionTypeDiscovery = "&omnifunc:<C-X><C-O>,&useKeywordCompletion:<C-X><C-I>"
 
 let xml_use_xhtml = 1
