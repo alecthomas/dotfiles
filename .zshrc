@@ -3,6 +3,10 @@ if [ -f /etc/profile ]; then
   source /etc/profile
 fi
 
+if [ -r ~/.zsh/local.zshrc ]; then
+  . ~/.zsh/local.zshrc
+fi
+
 # Global aliases
 alias -g L='|less'
 
@@ -159,8 +163,4 @@ g() {
 
 if [ -r ~/.zsh/$(uname).zshrc ]; then
   . ~/.zsh/$(uname).zshrc
-fi
-
-if [ -r ~/.zsh/local.zshrc ]; then
-  . ~/.zsh/local.zshrc
 fi
