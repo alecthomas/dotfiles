@@ -1,3 +1,4 @@
+.DS_Store
 .coverage
 .venv
 *.pyc
@@ -6,3 +7,4 @@ nosetests.out
 *.db
 *.egg-info
 dist/
+?.py
