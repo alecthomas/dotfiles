@@ -149,7 +149,7 @@ compinit -d "${ZDOTDIR:-$HOME}/.zcompdumps/${HOST%%.*}-$ZSH_VERSION"
 
 # f <glob> [<path>]
 f() {
-  find ${2-.} -iname \*${1-\*}\*
+  find ${2-.} ! -path '*/.git*' ! -path '*/.venv*' -iname \*${1-\*}\*
 }
 
 # g <regex> [<path>]
