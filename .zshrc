@@ -1,10 +1,11 @@
 #!/bin/zsh
+
 if [ -f /etc/profile ]; then
-  source /etc/profile
+  . /etc/profile
 fi
 
-if [ -r ~/.zsh/local.zshrc ]; then
-  . ~/.zsh/local.zshrc
+if [ -r ~/.zsh/zshrc.before ]; then
+  . ~/.zsh/zshrc.before
 fi
 
 # Global aliases
@@ -164,3 +165,8 @@ g() {
 if [ -r ~/.zsh/$(uname).zshrc ]; then
   . ~/.zsh/$(uname).zshrc
 fi
+
+if [ -r ~/.zsh/zshrc.after ]; then
+  . ~/.zsh/zshrc.after
+fi
+
