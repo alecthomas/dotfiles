@@ -62,6 +62,8 @@ set shortmess=a
 if has('gui_macvim')
   set pastetoggle=<Help>
   set guifont=Consolas:h15
+  " PeepOpen support
+  map <D-e> <Plug>PeepOpen
 else
   set pastetoggle=<Ins>
 endif
