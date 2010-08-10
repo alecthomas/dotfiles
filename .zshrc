@@ -154,12 +154,12 @@ compinit -d "${ZDOTDIR:-$HOME}/.zcompdumps/${HOST%%.*}-$ZSH_VERSION"
 
 # f <glob> [<path>]
 f() {
-  find ${2-.} ! -path '*/.git*' ! -path '*/.venv*' -iname \*${1-\*}\*
+  find ${2-.} ! -path '*/.git/*' ! -path '*/.venv*' ! -name '*.log*' -iname \*${1-\*}\*
 }
 
 # g <regex> [<path>]
 g() {
-  grep -irIE $1 ${2-.}
+  grep -iIE $1 $(f \* ${2-.})
 }
 
 if [ -r ~/.zsh/$(uname).zshrc ]; then

@@ -72,6 +72,9 @@ endif
 let pyref_browser='/usr/bin/open'
 let pyref_mapping='K'
 
+" Don't autoclose
+au FileType html,xhtml,xml let b:delimitMate_autoclose = 0
+
 " Filetypes that need real tabs
 autocmd FileType make :set ts=4 noet nolist
 " Defaults for indentation detection

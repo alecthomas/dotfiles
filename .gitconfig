@@ -12,3 +12,5 @@
 	smtpserver = smtp.gmail.com
 	smtpuser = alec@swapoff.org
 	smtpencryption = ssl
+[log]
+	decorate = true
