@@ -60,6 +60,7 @@ set shortmess=a
 
 " Use insert key to toggle paste mode
 if has('gui_macvim')
+  set transparency=30
   set pastetoggle=<Help>
   set guifont=Consolas:h15
   " PeepOpen support

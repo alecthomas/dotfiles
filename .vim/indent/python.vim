@@ -1,215 +1,209 @@
-" Python indent file
-" Language:	    Python
-" Maintainer:	    Eric Mc Sween <em@tomcom.de>
-" Original Author:  David Bustos <bustos@caltech.edu> 
-" Last Change:      2004 Jun 07
+" Vim indent file
+" Language:             Python
+" Maintainer:           David Moore <david@linuxsoftware.co.nz>
+" Original Author:      David Bustos <bustos@caltech.edu>
+" Last Change:          2010 Mar 3
 
 " Only load this indent file when no other was loaded.
 if exists("b:did_indent")
-    finish
+  finish
 endif
 let b:did_indent = 1
 
-setlocal expandtab
-setlocal nolisp
-setlocal autoindent
+" Some preliminary settings
+setlocal nolisp         " Make sure lisp indenting doesn't supersede us
+setlocal autoindent     " indentexpr isn't much help otherwise
+
 setlocal indentexpr=GetPythonIndent(v:lnum)
-setlocal indentkeys=!^F,o,O,<:>,0),0],0},=elif,=except,0#
+setlocal indentkeys=!^F,o,O,<:>,0),0],0},=elif,=except
 
-let s:maxoff = 50
+" Only define the function once.
+if exists("*GetPythonIndent")
+  finish
+endif
 
-" Find backwards the closest open parenthesis/bracket/brace.
-function! s:SearchParensPair()
-    let line = line('.')
-    let col = col('.')
-    
-    " Skip strings and comments and don't look too far
-    let skip = "line('.') < " . (line - s:maxoff) . " ? dummy :" .
-                \ 'synIDattr(synID(line("."), col("."), 0), "name") =~? ' .
-                \ '"string\\|comment"'
+" Come here when loading the script the first time.
 
-    " Search for parentheses
-    call cursor(line, col)
-    let parlnum = searchpair('(', '', ')', 'bW', skip)
-    let parcol = col('.')
+let s:maxoff = 50       " maximum number of lines to look backwards for ()
 
-    " Search for brackets
-    call cursor(line, col)
-    let par2lnum = searchpair('\[', '', '\]', 'bW', skip)
-    let par2col = col('.')
-
-    " Search for braces
-    call cursor(line, col)
-    let par3lnum = searchpair('{', '', '}', 'bW', skip)
-    let par3col = col('.')
-
-    " Get the closest match
-    if par2lnum > parlnum || (par2lnum == parlnum && par2col > parcol)
-        let parlnum = par2lnum
-        let parcol = par2col
-    endif
-    if par3lnum > parlnum || (par3lnum == parlnum && par3col > parcol)
-        let parlnum = par3lnum
-        let parcol = par3col
-    endif 
-
-    " Put the cursor on the match
-    if parlnum > 0
-        call cursor(parlnum, parcol)
-    endif
-    return parlnum
-endfunction
-
-" Find the start of a multi-line statement
 function! s:StatementStart(lnum)
-    let lnum = a:lnum
-    while 1
-        if getline(lnum - 1) =~ '\\$'
-            let lnum = lnum - 1
+  let lnum = a:lnum
+  while lnum > 0
+    if getline(lnum - 1) =~ '\\$'
+      let lnum = lnum - 1
+    else
+      call cursor(lnum, 1)
+      let maybe_lnum = searchpair('(\|{\|\[', '', ')\|}\|\]', 'bW',
+	                   \ "line('.') < " . (lnum - s:maxoff) . " ? dummy :"
+                 	  \ . " synIDattr(synID(line('.'), col('.'), 1), 'name')"
+                 	  \ . " =~ '\\(Comment\\|String\\)$'")
+      if maybe_lnum < 1
+        if lnum == a:lnum
+          return -1
         else
-            call cursor(lnum, 1)
-            let maybe_lnum = s:SearchParensPair()
-            if maybe_lnum < 1
-                return lnum
-            else
-                let lnum = maybe_lnum
-            endif
+          return lnum
         endif
-    endwhile
-endfunction
-
-" Find the block starter that matches the current line
-function! s:BlockStarter(lnum, block_start_re)
-    let lnum = a:lnum
-    let maxindent = 10000       " whatever
-    while lnum > 1
-        let lnum = prevnonblank(lnum - 1)
-        if indent(lnum) < maxindent
-            if getline(lnum) =~ a:block_start_re
-                return lnum
-            else 
-                let maxindent = indent(lnum)
-                " It's not worth going further if we reached the top level
-                if maxindent == 0
-                    return -1
-                endif
-            endif
-        endif
-    endwhile
-    return -1
-endfunction
-
-function! s:InCommentSyntax(lnum, ccol)
-    return synIDattr(synIDtrans(synID(a:lnum, a:ccol, 1)), "name") =~ 'Comment\|String'
-endfunction
-
-" In a comment? This check is naive.
-function! s:InsideComment(lnum)
-    let lnum = prevnonblank(a:lnum)
-    let line_start = match(getline(lnum), '\S') + 1
-    let line_end = match(getline(lnum), '$') - 1
-    if s:InCommentSyntax(lnum, line_start) && s:InCommentSyntax(lnum, line_end)
-        return 1
+      else
+        let lnum = maybe_lnum
+      endif
     endif
-    return 0
+  endwhile
 endfunction
 
 function! GetPythonIndent(lnum)
+  " Search backwards for the previous non-empty line.
+  let plnum = prevnonblank(a:lnum - 1)
 
-    " First line has indent 0
-    if a:lnum == 1
-        return 0
+  if plnum == 0
+    " This is the first non-empty line, use zero indent.
+    return 0
+  endif
+
+  " If this line is explicitly joined: If the previous line was also joined,
+  " line it up with that one, otherwise try to find an indentation that looks
+  " good. 
+  if getline(a:lnum - 1) =~ '\\$'
+    if a:lnum > 1 && getline(a:lnum - 2) =~ '\\$'
+      return indent(a:lnum - 1)
     endif
-
-    if s:InsideComment(a:lnum) == 1
-        return -1
+    let compound_statement = '^\s*\(if\|while\|for\s.*\sin\|except\)\s*'
+    let maybe_indent = matchend(getline(a:lnum - 1), compound_statement)
+    if maybe_indent != -1
+      return maybe_indent
+    else
+      return indent(a:lnum - 1) + (exists("g:pyindent_continue") ? eval(g:pyindent_continue) : (&sw * 2))
     endif
+  endif
 
-    " If we can find an open parenthesis/bracket/brace, line up with it.
-    call cursor(a:lnum, 1)
-    let parlnum = s:SearchParensPair()
-    if parlnum > 0
-        let parcol = col('.')
-        let closing_paren = match(getline(a:lnum), '^\s*[])}]') != -1
-        if match(getline(parlnum), '[([{]\s*$', parcol - 1) != -1
-            if closing_paren
-                return indent(parlnum)
-            else
-                return indent(parlnum) + &shiftwidth
-            endif
+  " If the start of the line is in a string don't change the indent.
+  if has('syntax_items')
+        \ && synIDattr(synID(a:lnum, 1, 1), "name") =~ "String$"
+    return -1
+  endif
+
+  " When inside parenthesis: line up with the opening parenthesis
+  call cursor(a:lnum, 1)
+  let p = searchpair('(\|{\|\[', '', ')\|}\|\]', 'bW',
+	  \ "line('.') < " . (a:lnum - s:maxoff) . " ? dummy :"
+	  \ . " synIDattr(synID(line('.'), col('.'), 1), 'name')"
+	  \ . " =~ '\\(Comment\\|String\\)$'")
+  if p > 0
+    let parcol = col('.')
+    if match(getline(a:lnum), '^\s*[])}]') != -1
+      return parcol - 1
+    else
+      return parcol
+    endif
+  endif
+
+  " If the previous line is inside parenthesis, use the indent of the starting
+  " line.
+  " Trick: use the non-existing "dummy" variable to break out of the loop when
+  " going too far back.
+  let parlnum = s:StatementStart(plnum)
+  if parlnum > 0
+    let plindent = indent(parlnum)
+    let plnumstart = parlnum
+  else
+    let plindent = indent(plnum)
+    let plnumstart = plnum
+  endif
+
+  " Get the line and remove a trailing comment.
+  " Use syntax highlighting attributes when possible.
+  let pline = getline(plnum)
+  let pline_len = strlen(pline)
+  if has('syntax_items')
+    " If the last character in the line is a comment, do a binary search for
+    " the start of the comment.  synID() is slow, a linear search would take
+    " too long on a long line.
+    if synIDattr(synID(plnum, pline_len, 1), "name") =~ "Comment$"
+      let min = 1
+      let max = pline_len
+      while min < max
+        let col = (min + max) / 2
+        if synIDattr(synID(plnum, col, 1), "name") =~ "Comment$"
+          let max = col
         else
-            if closing_paren
-                return parcol - 1
-            else
-                return parcol
-            endif
+          let min = col + 1
         endif
+      endwhile
+      let pline = strpart(pline, 0, min - 1)
     endif
-    
-    " Examine this line
-    let thisline = getline(a:lnum)
-    let thisindent = indent(a:lnum)
+  else
+    let col = 0
+    while col < pline_len
+      if pline[col] == '#'
+        let pline = strpart(pline, 0, col)
+        break
+      endif
+      let col = col + 1
+    endwhile
+  endif
 
-    " If the line starts with 'elif' or 'else', line up with 'if' or 'elif'
-    if thisline =~ '^\s*\(elif\|else\)\>'
-        let bslnum = s:BlockStarter(a:lnum, '^\s*\(if\|elif\)\>')
-        if bslnum > 0
-            return indent(bslnum)
-        else
-            return -1
+  " If the previous line ended with a colon, indent this line
+  if pline =~ ':\s*$'
+    return plindent + &sw
+  endif
+
+  " If the previous line was a stop-execution statement...
+  if getline(plnum) =~ '^\s*\(break\|continue\|raise\|return\|pass\)\>'
+    " See if the user has already dedented
+    if indent(a:lnum) > indent(plnum) - &sw
+      " If not, recommend one dedent
+      return indent(plnum) - &sw
+    endif
+    " Otherwise, trust the user
+    return -1
+  endif
+
+  " If the current line begins with a keyword that lines up with "try"
+  if getline(a:lnum) =~ '^\s*\(except\|finally\)\>'
+    let lnum = a:lnum - 1
+    while lnum >= 1
+      if getline(lnum) =~ '^\s*\(try\|except\)\>'
+        let ind = indent(lnum)
+        if ind >= indent(a:lnum)
+          return -1     " indent is already less than this
         endif
-    endif
-        
-    " If the line starts with 'except' or 'finally', line up with 'try'
-    " or 'except'
-    if thisline =~ '^\s*\(except\|finally\)\>'
-        let bslnum = s:BlockStarter(a:lnum, '^\s*\(try\|except\)\>')
-        if bslnum > 0
-            return indent(bslnum)
-        else
-            return -1
-        endif
-    endif
-    
-    " Examine previous line
-    let plnum = a:lnum - 1
-    let pline = getline(plnum)
-    let sslnum = s:StatementStart(plnum)
-    
-    " If the previous line is blank, keep the same indentation
-    if pline =~ '^\s*$'
-        return -1
-    endif
-    
-    " If this line is explicitly joined, try to find an indentation that looks
-    " good. 
-    if pline =~ '\\$'
-        let compound_statement = '^\s*\(if\|while\|for\s.*\sin\|except\)\s*'
-        let maybe_indent = matchend(getline(sslnum), compound_statement)
-        if maybe_indent != -1
-            return maybe_indent
-        else
-            return indent(sslnum) + &sw * 2
-        endif
-    endif
-    
-    " If the previous line ended with a colon, indent relative to
-    " statement start.
-    if pline =~ ':\s*$'
-        return indent(sslnum) + &sw
+        return ind      " line up with previous try or except
+      endif
+      let lnum = lnum - 1
+    endwhile
+    return -1           " no matching "try"!
+  endif
+
+  " If the current line begins with a header keyword, dedent
+  if getline(a:lnum) =~ '^\s*\(elif\|else\)\>'
+
+    " Unless the previous line was a one-liner
+    if getline(plnumstart) =~ '^\s*\(for\|if\|try\)\>'
+      return plindent
     endif
 
-    " If the previous line was a stop-execution statement or a pass
-    if getline(sslnum) =~ '^\s*\(break\|continue\|raise\|return\|pass\)\>'
-        " See if the user has already dedented
-        if indent(a:lnum) > indent(sslnum) - &sw
-            " If not, recommend one dedent
-            return indent(sslnum) - &sw
-        endif
-        " Otherwise, trust the user
-        return -1
+    " Or the user has already dedented
+    if indent(a:lnum) <= plindent - &sw
+      return -1
     endif
 
-    " In all other cases, line up with the start of the previous statement.
-    return indent(sslnum)
+    return plindent - &sw
+  endif
+
+  " If the current line starts a new function or class
+  if getline(a:lnum) =~ '^\s*\(def\|class\)\>'
+    return -1           " have to trust the user
+  endif
+
+  " When after a () construct we probably want to go back to the start line.
+  " a = (b
+  "       + c)
+  " here
+  if parlnum > 0
+    return plindent
+  endif
+
+  return -1
+
 endfunction
+
+" vim:sw=2
