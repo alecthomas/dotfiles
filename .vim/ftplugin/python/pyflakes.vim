@@ -55,6 +55,11 @@ class SyntaxError(messages.Message):
         messages.Message.__init__(self, filename, lineno, col)
         self.message_args = (message,)
 
+class Pep8Message(messages.Message):
+    def __init__(self, filename, lineno, col, message):
+        self.message = message
+        messages.Message.__init__(self, filename, lineno, col)
+
 class SilentPep8(pep8.Checker):
     def __init__(self, filename, buffer, messages):
         super(SilentPep8, self).__init__(None)
@@ -63,7 +68,7 @@ class SilentPep8(pep8.Checker):
         self._all_messages = messages
 
     def report_error(self, line_number, offset, text, check):
-        message = SyntaxError(self.filename, line_number, offset, text)
+        message = Pep8Message(self.filename, line_number, offset, text)
         self._all_messages.append(message)
 
 class blackhole(object):
@@ -80,7 +85,7 @@ def check(buffer):
     encoding_found = False
     for n, line in enumerate(contents):
         if not encoding_found:
-            if re.match(r'^# -\*- coding: .+? -*-', line):
+            if re.match(r'^# -\*- coding: .+? -*-|^# encoding: ', line):
                 encoding_found = True
         else:
             # skip all preceeding lines 
