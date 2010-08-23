@@ -29,6 +29,9 @@ hi Number     guifg=LightYellow ctermfg=LightYellow
 hi MatchParen guifg=LightGreen ctermfg=LightGreen gui=bold guibg=NONE ctermbg=NONE
 hi SpecialKey guifg=LightRed ctermfg=LightRed
 
+hi PyFlakes gui=undercurl guisp=Red
+hi PyFlakesPep8 gui=undercurl guisp=Magenta
+
 " Links
 hi link Character   String
 hi link Boolean     Constant

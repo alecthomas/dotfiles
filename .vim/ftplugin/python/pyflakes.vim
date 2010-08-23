@@ -226,6 +226,7 @@ endif
 if !exists("*s:RunPyflakes")
     function s:RunPyflakes()
         highlight link PyFlakes SpellBad
+        highlight link PyFlakesPep8 Todo
 
         if exists("b:cleared")
             if b:cleared == 0
@@ -262,7 +263,10 @@ for w in check(vim.current.buffer):
         vim.command(r"let s:mID = matchadd('PyFlakes', '\%" + str(w.lineno) + r"l\n\@!')")
     else:
         # with a column number, highlight the first keyword there
-        vim.command(r"let s:mID = matchadd('PyFlakes', '^\%" + str(w.lineno) + r"l\_.\{-}\zs\k\+\k\@!\%>" + str(w.col) + r"c')")
+        if isinstance(w, Pep8Message):
+            vim.command(r"let s:mID = matchadd('PyFlakesPep8', '^\%" + str(w.lineno) + r"l\_.\{-}\zs\k\+\k\@!\%>" + str(w.col) + r"c')")
+        else:
+            vim.command(r"let s:mID = matchadd('PyFlakes', '^\%" + str(w.lineno) + r"l\_.\{-}\zs\k\+\k\@!\%>" + str(w.col) + r"c')")
 
         vim.command("let l:qf_item.vcol = 1")
         vim.command("let l:qf_item.col = %s" % str(w.col + 1))
@@ -316,7 +320,7 @@ if !exists('*s:ClearPyflakes')
     function s:ClearPyflakes()
         let s:matches = getmatches()
         for s:matchId in s:matches
-            if s:matchId['group'] == 'PyFlakes'
+            if s:matchId['group'] == 'PyFlakes' || s:matchId['group'] == 'PyFlakesPep8'
                 call matchdelete(s:matchId['id'])
             endif
         endfor

@@ -9,3 +9,7 @@ alias ls='ls -FG'
 # Fix shitty ps. Probably other commands.
 export COMMAND_MODE=unix2003
 export PATH=$PATH:/usr/local/sbin
+# Adds some homebrew custom commands, in particular "brew linkapps"
+if which brew > /dev/null; then
+  export PATH=$PATH:$(brew --repository)/Library/Contributions/examples
+fi
