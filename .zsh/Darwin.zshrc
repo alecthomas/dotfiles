@@ -16,3 +16,8 @@ if which 6g > /dev/null; then
   export GOARCH=amd64
   export GOOS=darwin
 fi
+
+# Adds some homebrew custom commands, in particular "brew linkapps"
+if which brew > /dev/null; then
+  export PATH=$PATH:$(brew --repository)/Library/Contributions/examples
+fi
