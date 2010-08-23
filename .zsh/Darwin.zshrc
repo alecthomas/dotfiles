@@ -9,3 +9,10 @@ alias ls='ls -FG'
 # Fix shitty ps. Probably other commands.
 export COMMAND_MODE=unix2003
 export PATH=$PATH:/usr/local/sbin
+
+if which 6g > /dev/null; then
+  export GOROOT=`brew --cellar`/go/HEAD
+  export GOBIN=/Users/aat/Homebrew/bin
+  export GOARCH=amd64
+  export GOOS=darwin
+fi
