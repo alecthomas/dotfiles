@@ -75,3 +75,10 @@ class LateFutureImport(Message):
     def __init__(self, filename, lineno, col, names):
         Message.__init__(self, filename, lineno)
         self.message_args = (names,)
+
+
+class UnusedLocal(Message):
+    message = "unused local variable %r"
+    def __init__(self, filename, lineno, col, name):
+        Message.__init__(self, filename, lineno, col)
+        self.message_args = (name,)

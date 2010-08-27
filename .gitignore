@@ -7,3 +7,4 @@ history
 .zsh/zshrc.before
 .zsh/zshrc.after
 .ipython/db
+.vim/.netrwhist
