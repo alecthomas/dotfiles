@@ -115,13 +115,16 @@ class Checker(ast.NodeVisitor):
     def pop_scope(self):
         scope = self.scope_stack.pop()
         if isinstance(scope, FunctionScope):
-            upscope = self.scope
-            for name, value in scope.iteritems():
-                is_method_self = name == 'self' and isinstance(upscope, ClassScope)
-                unused_name = name.startswith('unused_') or not name.strip('_')
-                if not unused_name and not value.used and not is_method_self:
-                    self.report(messages.UnusedLocal, value.source.lineno, value.source.col_offset, name)
+            self.defer(lambda: self.check_unbound_locals(self.scope, scope))
         self.dead_scopes.append(scope)
+
+    def check_unbound_locals(self, upscope, scope):
+        upscope = self.scope
+        for name, value in scope.iteritems():
+            is_method_self = name == 'self' and isinstance(upscope, ClassScope)
+            unused_name = name.startswith('unused_') or not name.strip('_')
+            if not unused_name and not value.used and not is_method_self:
+                self.report(messages.UnusedLocal, value.source.lineno, value.source.col_offset, name)
 
     @property
     def scope(self):
