@@ -11,6 +11,9 @@ let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 set runtimepath+=~/.vim/ultisnips
 
+" Expand %% to enclosing directory of currently edited file.
+cabbr <expr> %% expand('%:p:h')
+
 
 " Turn off annoying beeps
 set vb
