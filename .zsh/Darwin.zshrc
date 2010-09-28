@@ -10,13 +10,6 @@ alias ls='ls -FG'
 export COMMAND_MODE=unix2003
 export PATH=$PATH:/usr/local/sbin
 
-if which 6g > /dev/null; then
-  export GOROOT=`brew --cellar`/go/HEAD
-  export GOBIN=/Users/aat/Homebrew/bin
-  export GOARCH=amd64
-  export GOOS=darwin
-fi
-
 # Adds some homebrew custom commands, in particular "brew linkapps"
 if which brew > /dev/null; then
   export PATH=$PATH:$(brew --repository)/Library/Contributions/examples

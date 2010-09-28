@@ -14,6 +14,9 @@ set runtimepath+=~/.vim/ultisnips
 " Expand %% to enclosing directory of currently edited file.
 cabbr <expr> %% expand('%:p:h')
 
+" Use 'Q' to reformat
+vmap Q gq
+nmap Q gqap
 
 " Turn off annoying beeps
 set vb
