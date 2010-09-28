@@ -3,6 +3,7 @@ history
 *.pyc
 .vim/work
 .vim/doc/tags
+zshrc.local
 .zsh/history*
 .zsh/zshrc.before
 .zsh/zshrc.after
