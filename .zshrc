@@ -24,7 +24,7 @@ autoload colors zsh/terminfo
 colors
 
 # Ignore these extensions during tab completion
-fignore=('.pyc' '.sw?')
+fignore=('.pyc' '.sw?' '.6' '.8')
 
 PROMPT='[%n@%B%m%b:%~]'
 
@@ -171,4 +171,3 @@ fi
 if [ -r ~/.zsh/zshrc.after ]; then
   . ~/.zsh/zshrc.after
 fi
-
