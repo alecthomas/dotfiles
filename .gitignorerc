@@ -8,3 +8,17 @@ nosetests.out
 *.egg-info
 dist/
 ?.py
+*.o
+*.a
+*.[568vq]
+[568vq].out
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+*.so
+_obj
+_test
+_testmain.go
+*.exe

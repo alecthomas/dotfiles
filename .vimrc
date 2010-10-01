@@ -184,6 +184,15 @@ map <silent> <C-Tab> :tabnext<CR>
 map <silent> <C-S-Tab> :tabprevious<CR>
 map <silent> <M-D-Right> :tabnext<CR>
 map <silent> <M-D-Left> :tabprevious<CR>
+map <silent> <D-1> 1gt
+map <silent> <D-2> 2gt
+map <silent> <D-3> 3gt
+map <silent> <D-4> 4gt
+map <silent> <D-5> 5gt
+map <silent> <D-6> 6gt
+map <silent> <D-7> 7gt
+map <silent> <D-8> 8gt
+map <silent> <D-9> 9gt
 
 " Nerd tree
 let NERDTreeQuitOnOpen=1
