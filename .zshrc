@@ -111,7 +111,6 @@ HISTFILE=~/.zsh/history
 
 # ZSH options
 setopt auto_cd \
-  auto_pushd \
   auto_resume \
   append_history \
   complete_in_word \
