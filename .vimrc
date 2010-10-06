@@ -114,9 +114,6 @@ map <silent> <C-l> :nohlsearch<CR>:redraw!<CR>
 " ??
 autocmd Syntax * syntax sync fromstart
 
-" Show extra information about completion
-"set completeopt=longest,menu
-
 filetype plugin on
 filetype indent on
 set smartindent
@@ -141,10 +138,6 @@ inoremap <C-Space> <C-x><C-o>
 
 " Default to using keyword completion
 let g:SuperTabDefaultCompletionType = "<C-X><C-N>"
-" Enable omnicomplete for Python
-autocmd FileType python setlocal omnifunc=pysmell#Complete
-autocmd FileType python let g:SuperTabDefaultCompletionType = "<C-X><C-N>"
-"let g:SuperTabDefaultCompletionTypeDiscovery = "&omnifunc:<C-X><C-O>,&useKeywordCompletion:<C-X><C-I>"
 
 let xml_use_xhtml = 1
 
@@ -160,8 +153,7 @@ highlight ExtraWhitespace cterm=NONE ctermbg=red guibg=red
 autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 " PySmell options and supertab integration
-"set completeopt=menuone,longest,preview
-set completeopt=longest,menuone
+set completeopt=preview,menuone
 
 " Change to working directory of current buffer. Very useful.
 " set autochdir
