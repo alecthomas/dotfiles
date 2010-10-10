@@ -1,19 +1,21 @@
-imap { <Esc>:call ReplaceCurly()<CR>"_cl
-function! ReplaceCurly()
-  imap { {
+inoremap <CR> <C-R>=InsertClosingCurly()<CR>
+
+" Inserts a closing } if outside a comment or string, and pressing enter
+" immediately after a { at the end of a line.
+function! InsertClosingCurly()
   " only replace outside of comments or strings (which map to constant)
   let elesyn = synIDtrans(synID(line("."), col(".") - 1, 0))
-  if elesyn != hlID('Comment') && elesyn != hlID('Constant') && match(getline("."), "\\<new\\>") < 0
-    exe "normal a{"
+  let lineText = getline(line("."))
+  let enterAfterBrace = col(".") - 1 == len(lineText) && match(lineText, "{$") != -1
+  if enterAfterBrace && elesyn != hlID('Comment') && elesyn != hlID('Constant')
     " need to add a spare character (x) to position the cursor afterwards
     exe "normal ox"
     exe "normal o}"
-    exe "normal kw"
+    exe "normal x"
   else
-    " need to add a spare character (x) to position the cursor afterwards
-    exe "normal a{x"
+    return "\n"
   endif
-  imap { <Esc>:let word= ReplaceCurly()<CR>"_cl
+  return ""
 endfunction
 
 "Surround code with braces
