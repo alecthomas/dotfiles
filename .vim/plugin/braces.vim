@@ -9,9 +9,9 @@ function! InsertClosingCurly()
   let enterAfterBrace = col(".") - 1 == len(lineText) && match(lineText, "{$") != -1
   if enterAfterBrace && elesyn != hlID('Comment') && elesyn != hlID('Constant')
     " need to add a spare character (x) to position the cursor afterwards
-    exe "normal ox"
+    exe "normal o "
     exe "normal o}"
-    exe "normal x"
+    exe "normal k$"
   else
     return "\n"
   endif
