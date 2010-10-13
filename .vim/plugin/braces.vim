@@ -1,21 +1,22 @@
-inoremap <CR> <C-R>=InsertClosingCurly()<CR>
+if exists("b:did_bracesplugin")
+  finish
+endif
 
-" Inserts a closing } if outside a comment or string, and pressing enter
-" immediately after a { at the end of a line.
-function! InsertClosingCurly()
+inoremap <silent> <CR> <Esc>:call <SID>InsertClosingCurly()<CR>a<CR>
+
+" Inserts a closing }, ] or ) if outside a comment or string, and pressing
+" enter immediately after a {, [ or ( at the end of a line.
+function! s:InsertClosingCurly()
   " only replace outside of comments or strings (which map to constant)
+  let closingChar = {"{": "}", "(": ")", "[": "]"}
   let elesyn = synIDtrans(synID(line("."), col(".") - 1, 0))
   let lineText = getline(line("."))
-  let enterAfterBrace = col(".") - 1 == len(lineText) && match(lineText, "{$") != -1
+  let closing = matchstr(lineText, "[{\\[(]$")
+  let enterAfterBrace = col(".") == len(lineText) && closing != ""
   if enterAfterBrace && elesyn != hlID('Comment') && elesyn != hlID('Constant')
-    " need to add a spare character (x) to position the cursor afterwards
-    exe "normal o "
-    exe "normal o}"
-    exe "normal k$"
-  else
-    return "\n"
+    exe "normal o" . closingChar[closing]
+    exe "normal kA"
   endif
-  return ""
 endfunction
 
 "Surround code with braces
