@@ -116,8 +116,9 @@ autocmd Syntax * syntax sync fromstart
 
 filetype plugin on
 filetype indent on
-set smartindent
-set autoindent
+" set nosmartindent
+" set cindent
+" set autoindent
 
 " Tell extended Python highlighter
 let python_highlight_space_errors=1
@@ -153,7 +154,7 @@ highlight ExtraWhitespace cterm=NONE ctermbg=red guibg=red
 autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 " PySmell options and supertab integration
-set completeopt=preview,menuone
+set completeopt=menuone
 
 " Change to working directory of current buffer. Very useful.
 " set autochdir

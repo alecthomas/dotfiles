@@ -89,10 +89,19 @@ function! GetPythonIndent(lnum)
 	  \ . " =~ '\\(Comment\\|String\\)$'")
   if p > 0
     let parcol = col('.')
-    if match(getline(a:lnum), '^\s*[])}]') != -1
-      return parcol - 1
+    " For long lines, don't line up with opening paranthesis.
+    if parcol > 40
+      if line(".") == plnum
+	return indent(plnum) + (&sw * 2)
+      else
+	return indent(plnum)
+      endif
     else
-      return parcol
+      if match(getline(a:lnum), '^\s*[])}]') != -1
+	return parcol - 1
+      else
+	return parcol
+      endif
     endif
   endif
 
