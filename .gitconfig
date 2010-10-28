@@ -14,3 +14,8 @@
 	smtpencryption = ssl
 [log]
 	decorate = true
+[alias]
+	st = status
+	br = branch
+	ui = !open /Applications/GitX.app
+	co = git checkout
