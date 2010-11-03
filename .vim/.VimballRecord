@@ -1,1 +1,2 @@
 delimitMate.vba: call delete('/Users/athomas/.vim/plugin/delimitMate.vim')|call delete('/Users/athomas/.vim/autoload/delimitMate.vim')|call delete('/Users/athomas/.vim/doc/delimitMate.txt')
+xmledit-1.9.1.vba: call delete('/Users/aat/.vim/ftplugin/xml.vim')|call delete('/Users/aat/.vim/doc/xml-plugin.txt')

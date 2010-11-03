@@ -18,4 +18,4 @@
 	st = status
 	br = branch
 	ui = !open /Applications/GitX.app
-	co = git checkout
+	co = checkout
