@@ -40,6 +40,8 @@ bindkey '^E' edit-command-line
 # Insert the last word from the previous line.
 bindkey "^P" insert-last-word
 
+source ~/.zsh/plugins/git-flow-completion.zsh
+
 # Automatically quote meta-characters in URLs!
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
