@@ -19,3 +19,5 @@
 	br = branch
 	ui = !open /Applications/GitX.app
 	co = checkout
+[branch]
+	autosetupmerge = always
