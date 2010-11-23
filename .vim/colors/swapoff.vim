@@ -10,11 +10,11 @@ endif
 
 let g:colors_name = "swapoff"
 
-hi Normal     ctermfg=Gray guifg=Gray guibg=black gui=NONE cterm=NONE
+hi Normal     ctermfg=Gray guifg=#d0d0d0 guibg=black gui=NONE cterm=NONE
 hi Comment    guifg=DarkCyan ctermfg=DarkCyan
 hi Constant   guifg=White ctermfg=White
 hi Special    guifg=White ctermfg=White
-hi Identifier guifg=Gray ctermfg=Gray
+hi Identifier guifg=#d0d0d0 ctermfg=Gray
 hi Statement  guifg=White ctermfg=White
 hi PreProc    guifg=LightGreen ctermfg=LightGreen
 hi Type       guifg=White ctermfg=White
