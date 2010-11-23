@@ -146,11 +146,15 @@ if exists("python_highlight_space_errors") && python_highlight_space_errors != 0
   syn match pythonSpaceError	"\s\+$" display
 endif
 
+" Sphinx docstring formatting
+syn match pythonSphinx   ":\(raises\|raise\|ivar\|cvar\|var\|type\|keyword\|param\|type\)\s\+\w\+:" display contained
+syn match pythonSphinx   ":\(returns\|return\|rtype\|type\|copyright\|license\):" display contained
+
 " Strings
 syn region pythonString		start=+[bB]\='+ skip=+\\\\\|\\'\|\\$+ excludenl end=+'+ end=+$+ keepend contains=pythonEscape,pythonEscapeError,@Spell
 syn region pythonString		start=+[bB]\="+ skip=+\\\\\|\\"\|\\$+ excludenl end=+"+ end=+$+ keepend contains=pythonEscape,pythonEscapeError,@Spell
-syn region pythonString		start=+[bB]\="""+ end=+"""+ fold keepend contains=pythonEscape,pythonEscapeError,pythonDocTest2,pythonSpaceError,@Spell
-syn region pythonString		start=+[bB]\='''+ end=+'''+ fold keepend contains=pythonEscape,pythonEscapeError,pythonDocTest,pythonSpaceError,@Spell
+syn region pythonString		start=+[bB]\="""+ end=+"""+ fold keepend contains=pythonSphinx,pythonEscape,pythonEscapeError,pythonDocTest2,pythonSpaceError,@Spell
+syn region pythonString		start=+[bB]\='''+ end=+'''+ fold keepend contains=pythonSphinx,pythonEscape,pythonEscapeError,pythonDocTest,pythonSpaceError,@Spell
 
 syn match  pythonEscape		+\\[abfnrtv'"\\]+ display contained
 syn match  pythonEscape		"\\\o\o\=\o\=" display contained
@@ -324,6 +328,7 @@ if version >= 508 || !exists("did_python_syn_inits")
   HiLink pythonRawString	String
   HiLink pythonUniRawString	String
 
+  HiLink pythonSphinx     Special
   HiLink pythonEscape			Special
   HiLink pythonEscapeError		Error
   HiLink pythonUniEscape		Special
