@@ -17,7 +17,7 @@
 [alias]
 	st = status
 	br = branch
-	ui = !open /Applications/GitX.app
+	ui = !open /Applications/GitX2.app
 	co = checkout
 [branch]
 	autosetupmerge = always
