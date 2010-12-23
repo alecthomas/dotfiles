@@ -1,9 +1,10 @@
 " Vim syntax file
 " Language:     JavaScript
 " Maintainer:   Yi Zhao (ZHAOYI) <zzlinux AT hotmail DOT com>
-" Last Change:  June 4, 2009
-" Version:      0.7.7
-" Changes:      Add "undefined" as a type keyword
+" Last Change By: Darrick Wiebe
+" Last Change:  August 25, 2010
+" Version:      0.7.8
+" Changes:      Disambiguate regex strings and mathematical statements
 "
 " TODO:
 "  - Add the HTML syntax inside the JSDoc
@@ -58,7 +59,7 @@ syntax case match
 syntax match   javaScriptSpecial        "\\\d\d\d\|\\x\x\{2\}\|\\u\x\{4\}\|\\."
 syntax region  javaScriptStringD        start=+"+  skip=+\\\\\|\\$"+  end=+"+  contains=javaScriptSpecial,@htmlPreproc
 syntax region  javaScriptStringS        start=+'+  skip=+\\\\\|\\$'+  end=+'+  contains=javaScriptSpecial,@htmlPreproc
-syntax region  javaScriptRegexpString   start=+/\(\*\|/\)\@!+ skip=+\\\\\|\\/+ end=+/[gim]\{,3}+ contains=javaScriptSpecial,@htmlPreproc oneline
+syntax region  javaScriptRegexpString   start=+\(\([)\]"']\|\d\|\w\)\s*\)\@<!/\(\*\|/\)\@!+ skip=+\\\\\|\\/+ end=+/[gim]\{,3}+ contains=javaScriptSpecial,@htmlPreproc oneline
 syntax match   javaScriptNumber         /\<-\=\d\+L\=\>\|\<0[xX]\x\+\>/
 syntax match   javaScriptFloat          /\<-\=\%(\d\+\.\d\+\|\d\+\.\|\.\d\+\)\%([eE][+-]\=\d\+\)\=\>/
 syntax match   javaScriptLabel          /\(?\s*\)\@<!\<\w\+\(\s*:\)\@=/
@@ -152,7 +153,26 @@ if main_syntax == "javascript"
   syntax sync match javaScriptHighlight grouphere javaScriptBlock /{/
 endif
 
-syntax keyword javaScriptFunction       function
+"" Fold control
+if exists("b:javascript_fold")
+    syntax match   javaScriptFunction       /\<function\>/ nextgroup=javaScriptFuncName skipwhite
+    syntax match   javaScriptOpAssign       /=\@<!=/ nextgroup=javaScriptFuncBlock skipwhite skipempty
+    syntax region  javaScriptFuncName       contained matchgroup=javaScriptFuncName start=/\%(\$\|\w\)*\s*(/ end=/)/ contains=javaScriptLineComment,javaScriptComment nextgroup=javaScriptFuncBlock skipwhite skipempty
+    syntax region  javaScriptFuncBlock      contained matchgroup=javaScriptFuncBlock start="{" end="}" contains=@javaScriptAll,javaScriptParensErrA,javaScriptParensErrB,javaScriptParen,javaScriptBracket,javaScriptBlock fold
+
+    if &l:filetype=='javascript' && !&diff
+      " Fold setting
+      " Redefine the foldtext (to show a JS function outline) and foldlevel
+      " only if the entire buffer is JavaScript, but not if JavaScript syntax
+      " is embedded in another syntax (e.g. HTML).
+      setlocal foldmethod=syntax
+      setlocal foldlevel=4
+    endif
+else
+    syntax keyword javaScriptFunction       function
+    setlocal foldmethod<
+    setlocal foldlevel<
+endif
 
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
@@ -181,14 +201,13 @@ if version >= 508 || !exists("did_javascript_syn_inits")
   HiLink javaScriptBranch               Conditional
   HiLink javaScriptRepeat               Repeat
   HiLink javaScriptStatement            Statement
-  HiLink javaScriptFunction             Type
+  HiLink javaScriptFunction             Function
   HiLink javaScriptError                Error
   HiLink javaScriptParensError          Error
   HiLink javaScriptParensErrA           Error
   HiLink javaScriptParensErrB           Error
   HiLink javaScriptParensErrC           Error
   HiLink javaScriptOperator             Operator
-  HiLink javaScriptFunctionKeyword      Type
   HiLink javaScriptType                 Type
   HiLink javaScriptNull                 Type
   HiLink javaScriptNumber               Number

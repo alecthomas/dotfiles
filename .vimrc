@@ -5,6 +5,8 @@ if filereadable(expand('~/.vimrc.local'))
   so ~/.vimrc.local
 endif
 
+let g:pyflakes_use_quickfix = 0
+
 " Enable snippeting
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"

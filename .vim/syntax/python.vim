@@ -162,6 +162,7 @@ endif
 " Sphinx docstring formatting
 syn match pythonSphinx   ":\(raises\|raise\|ivar\|cvar\|var\|type\|keyword\|param\|type\)\s\+\w\+:" display contained
 syn match pythonSphinx   ":\(returns\|return\|rtype\|type\|copyright\|license\):" display contained
+syn match pythonSphinx   ":\(func\|class\|mvar\|cvar\|svar\|ivar\|meth\):`[^`]\+`" display contained
 
 " Strings
 syn region pythonString		start=+[bB]\='+ skip=+\\\\\|\\'\|\\$+ excludenl end=+'+ end=+$+ keepend contains=pythonEscape,pythonEscapeError,@Spell
