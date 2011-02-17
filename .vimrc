@@ -70,7 +70,8 @@ set shortmess=a
 if has('gui_macvim')
   set transparency=30
   set pastetoggle=<Help>
-  set guifont=Menlo:h14
+  set guifont=Monaco:h10
+  set noantialias
   " PeepOpen support
   map <D-e> <Plug>PeepOpen
 else

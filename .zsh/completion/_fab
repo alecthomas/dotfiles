@@ -1,0 +1,5 @@
+#compdef fab
+
+_fab() {
+    compadd $(fab --shortlist)
+}
