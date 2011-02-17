@@ -1,13 +1,5 @@
-/**
- * Copyright 2010, Alec Thomas. All rights reserved.
- */
+// Copyright 2010 Julpan Inc. All rights reserved
+// Author: alec@julpan.com (Alec Thomas)
 
 #include "@FILE@.h"
 
-
-@FILE@::@FILE@() {
-}
-
-
-@FILE@::~@FILE@() {
-}

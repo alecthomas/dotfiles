@@ -28,6 +28,8 @@ set vb t_vb=
 " Tell syntax highlighting we have a dark background
 let &background = "dark"
 
+set tags=tags;/
+
 " Force latin1 terminal encoding?
 set fileencoding=utf-8
 set encoding=utf-8
@@ -196,6 +198,9 @@ map <silent> <D-9> 9gt
 " Nerd tree
 let NERDTreeQuitOnOpen=1
 map <silent> <F2> :NERDTreeToggle<CR>
+
+" Toggle headers
+map <silent> <C-X> :FSHere<CR>
 
 " Set colorscheme
 colorscheme swapoff

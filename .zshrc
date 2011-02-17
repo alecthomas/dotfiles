@@ -26,8 +26,6 @@ colors
 # Ignore these extensions during tab completion
 fignore=('.pyc' '.sw?' '.6' '.8')
 
-PROMPT='[%n@%B%m%b:%~]'
-
 # press M-CR to accept and keep the completion going
 bindkey '\e^M' accept-and-menu-complete
 # The VI variants refuse to backspace over existing text. This is shit.

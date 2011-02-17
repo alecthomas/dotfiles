@@ -23,4 +23,13 @@ _test
 _testmain.go
 *.exe
 tags
+cscope.out
 [t-z]
+GTAGS
+GPATH
+GRTAGS
+GSYMS
+.cproject
+.project
+.settings
+.todo
