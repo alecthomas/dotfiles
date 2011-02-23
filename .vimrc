@@ -212,3 +212,7 @@ set go-=T
 " Stuff for Rope - Yet again, buggy as hell.
 "let $PYTHONPATH .= ":/Users/aat/Downloads/ropevim:/Users/aat/Downloads/ropemode"
 "source /Users/aat/Downloads/ropevim/ropevim.vim
+
+" Used for Command-T
+set wildignore=*.o,*.a,*.so,*.pyc,*~,*.class,build/*,build-*,tags,cscope*,third_party/*,java/*,users/*
+map <silent> <C-J> <Leader>t

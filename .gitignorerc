@@ -33,3 +33,4 @@ GSYMS
 .project
 .settings
 .todo
+?.cc

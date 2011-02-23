@@ -56,7 +56,7 @@ precmd() {
   test -t 1 || return
   case $TERM in
     xterm*|rxvt*)
-      print -Pn "\e]2;$XTITLE\a"
+      print -Pn "\e]0;$XTITLE\a"
       ;;
   esac
   # Collapse the prompt path components to all first characters except the
