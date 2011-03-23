@@ -11,7 +11,7 @@ function! s:InsertClosingCurly()
   let closingChar = {"{": "}", "(": ")", "[": "]"}
   let elesyn = synIDtrans(synID(line("."), col(".") - 1, 0))
   let lineText = getline(line("."))
-  let closing = matchstr(lineText, "[{\\[(]$")
+  let closing = matchstr(lineText, "[[{(]$")
   let enterAfterBrace = col(".") == len(lineText) && closing != ""
   if enterAfterBrace && elesyn != hlID('Comment') && elesyn != hlID('Constant')
     exe "normal o" . closingChar[closing]

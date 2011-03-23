@@ -147,7 +147,6 @@ let g:SuperTabDefaultCompletionType = "<C-X><C-N>"
 
 let xml_use_xhtml = 1
 
-" Make spell-correction/pyflakes colours less obtrusive
 highlight SpellBad cterm=NONE ctermfg=darkred ctermbg=none
 
 " De-uglify omni-complete menu

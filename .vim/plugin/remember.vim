@@ -1,5 +1,5 @@
 " Store state across VIM sessions
-set viminfo='50,<1000,s100,:100,f1,%
+set viminfo='50,<1000,s100,:100,f1
 
 " Restore previous cursor position, expanding folds
 augroup JumpCursorOnEdit
