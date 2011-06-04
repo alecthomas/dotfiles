@@ -20,7 +20,7 @@ hi PreProc    guifg=LightGreen ctermfg=LightGreen
 hi Type       guifg=White ctermfg=White
 hi Underlined gui=underline cterm=underline guifg=LightBlue ctermfg=LightBlue
 hi Ignore     guifg=Black ctermfg=Black
-hi Error      guifg=White ctermfg=White ctermbg=Red guibg=Red
+hi Error      guifg=White ctermfg=White ctermbg=Red guifg=Red
 hi Todo       guifg=Black ctermfg=Black guibg=Yellow
 hi Search     gui=bold,underline cterm=bold,underline ctermfg=NONE guifg=NONE guibg=NONE ctermbg=NONE
 hi Folded     gui=bold cterm=bold guifg=cyan ctermfg=cyan guibg=NONE ctermbg=NONE

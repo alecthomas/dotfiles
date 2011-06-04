@@ -1,63 +1,30 @@
-" Vim indent file
-" Language:	Go
-" Author:	Alecs King <alecsk@gmail.com>
+" Copyright 2011 The Go Authors. All rights reserved.
+" Use of this source code is governed by a BSD-style
+" license that can be found in the LICENSE file.
 "
-" inspired by indent/lua.vim
+" indent/go.vim: Vim indent file for Go.
 "
-" very simple:
-" just indent common cases to avoid manually typing tab or backspace
-"
-" for better style, please use gofmt after done editing.
-"
-" since it just simply uses regex matches,
-" there might be some mis-indented corner cases.
-" 
 
-" Only load this indent file when no other was loaded.
 if exists("b:did_indent")
-  finish
+    finish
 endif
 let b:did_indent = 1
 
-setlocal indentexpr=GetGoIndent()
+" C indentation is mostly correct
+setlocal cindent
 
-" To make Vim call GetLuaIndent() when it finds '\s*)', '\s*}', '\s*case', '\s*default'
-setlocal indentkeys+=0=),0=},0=case,0=default
-
-setlocal autoindent
-
-" Only define the function once.
-if exists("*GetGoIndent")
-  finish
-endif
-
-function! GetGoIndent()
-  " Find a non-blank line above the current line.
-  let prevlnum = prevnonblank(v:lnum - 1)
-
-  " Hit the start of the file, use zero indent.
-  if prevlnum == 0
-    return 0
-  endif
-
-  " Add a 'shiftwidth' after lines that start a block:
-  " 'case', 'default', '{', '('
-  let ind = indent(prevlnum)
-  let prevline = getline(prevlnum)
-  let midx = match(prevline, '^\s*\%(case\>\|default\>\)')
-  if midx == -1
-    let midx = match(prevline, '[({]\s*$')
-  endif
-  if midx != -1
-    let ind = ind + &shiftwidth
-  endif
-
-  " Subtract a 'shiftwidth' on 'case', 'default', '}', ')'.
-  " This is the part that requires 'indentkeys'.
-  let midx = match(getline(v:lnum), '^\s*\%(case\>\|default\>\|[)}]\)')
-  if midx != -1
-    let ind = ind - &shiftwidth
-  endif
-
-  return ind
-endfunction
+" Options set:
+" +0 -- Don't indent continuation lines (because Go doesn't use semicolons
+"       much)
+" L0 -- Don't move jump labels (NOTE: this isn't correct when working with
+"       gofmt, but it does keep struct literals properly indented.)
+" :0 -- Align case labels with switch statement
+" l1 -- Always align case body relative to case labels
+" J1 -- Indent JSON-style objects (properly indents struct-literals)
+" (0, Ws -- Indent lines inside of unclosed parentheses by one shiftwidth
+" m1 -- Align closing parenthesis line with first non-blank of matching
+"       parenthesis line
+"
+" Known issue: Trying to do a multi-line struct literal in a short variable
+"              declaration will not indent properly.
+setlocal cinoptions+=+0,L0,:0,l1,J1,(0,Ws,m1

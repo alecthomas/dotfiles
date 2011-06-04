@@ -98,7 +98,7 @@ umask 0027
 
 expand-or-complete-with-dots() {
   echo -n "${fg[red]}...${terminfo[sgr0]}"
-  zle expand-or-complete
+  zle expand-or-complete-prefix
   zle redisplay
 }
 zle -N expand-or-complete-with-dots
