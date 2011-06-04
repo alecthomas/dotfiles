@@ -33,4 +33,5 @@ GSYMS
 .project
 .settings
 .todo
+.todo2
 ?.cc

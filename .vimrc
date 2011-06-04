@@ -72,8 +72,8 @@ set shortmess=a
 if has('gui_macvim')
   set transparency=30
   set pastetoggle=<Help>
-  set guifont=Monaco:h10
-  set noantialias
+  set guifont=Menlo:h12
+  set antialias
   " PeepOpen support
   map <D-e> <Plug>PeepOpen
 else
@@ -158,7 +158,7 @@ highlight ExtraWhitespace cterm=NONE ctermbg=red guibg=red
 autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 " PySmell options and supertab integration
-set completeopt=menuone
+set completeopt=menuone,longest,preview
 
 " Change to working directory of current buffer. Very useful.
 " set autochdir
