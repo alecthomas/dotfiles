@@ -1,8 +1,11 @@
-/**
- * Copyright 2010, Alec Thomas. All rights reserved.
- */
+// Copyright 2010 Julpan Inc. All rights reserved
+// Author: alec@julpan.com (Alec Thomas)
 
-#ifndef @FILE@_h__
-#define @FILE@_h__
+#ifndef _@FILE@__h_
+#define _@FILE@__h_
+
+namespace julpan {
+
+}
 
 #endif

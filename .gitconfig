@@ -4,22 +4,29 @@
   status = auto
 
 [core]
-	excludesfile = ~/.gitignorerc
+  excludesfile = ~/.gitignorerc
 [user]
-	name = Alec Thomas
-	email = alec@swapoff.org
+  name = Alec Thomas
+  email = alec@swapoff.org
 [sendemail]
-	smtpserver = smtp.gmail.com
-	smtpuser = alec@swapoff.org
-	smtpencryption = ssl
+  smtpserver = smtp.gmail.com
+  smtpuser = alec@swapoff.org
+  smtpencryption = ssl
 [log]
-	decorate = true
+  decorate = true
 [alias]
-	st = status
-	br = branch
-	ui = !open /Applications/GitX2.app
-	co = checkout
+  st = status
+  br = branch
+  ui = !open /Applications/GitX2.app
+  co = checkout
+  ci = commit
 [branch]
-	autosetupmerge = always
+  autosetupmerge = always
 [merge]
-	tool = opendiff
+  tool = opendiff
+[giggle]
+  main-window-maximized = false
+  main-window-geometry = 1441x975+365+106
+  history-view-vpane-position = 539
+  main-window-view = HistoryView
+  file-view-vpane-position = 346

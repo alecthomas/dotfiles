@@ -3,9 +3,9 @@
 "
 " Also maps the "-" key to toggle expansion and <C-f> to toggle all folding.
 "
-set foldmethod=syntax
-set foldtext=FoldText()
-set fillchars=
+setlocal foldmethod=syntax
+setlocal foldtext=FoldText()
+setlocal fillchars=
 
 map <buffer> - za
 map <buffer> <C-f> :call ToggleFold()<CR>

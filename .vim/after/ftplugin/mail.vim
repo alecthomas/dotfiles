@@ -1,7 +1,7 @@
-set textwidth=72
-set expandtab
-set nolist
-set wrap
+setlocal textwidth=72
+setlocal expandtab
+setlocal nolist
+setlocal wrap
 
 let no_mail_maps=1
 

@@ -199,7 +199,8 @@ let NERDTreeQuitOnOpen=1
 map <silent> <F2> :NERDTreeToggle<CR>
 
 " Toggle headers
-map <silent> <C-X> :FSHere<CR>
+map <silent> <C-H> :FSHere<CR>
+map <silent> <C-X> :bd<CR>
 
 " Set colorscheme
 colorscheme swapoff
@@ -213,5 +214,8 @@ set go-=T
 "source /Users/aat/Downloads/ropevim/ropevim.vim
 
 " Used for Command-T
-set wildignore=*.o,*.a,*.so,*.pyc,*~,*.class,build/*,build-*,tags,cscope*,third_party/*,java/*,users/*
+set wildignore=*.o,*.a,*.so,*.pyc,*~,*.class,build/*,build-*,tags,cscope*,third_party/*,java/*,users/*,data/*
 map <silent> <C-J> <Leader>t
+
+" Jump to a symbol from the CScope database: eg. :Sym Nilsimsa
+command! -nargs=1 Sym cscope find g <args>

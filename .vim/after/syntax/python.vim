@@ -1,1 +1,1 @@
-set et
+setlocal et

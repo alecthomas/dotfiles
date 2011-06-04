@@ -13,10 +13,13 @@ alias -g L='|less'
 
 # Use "run-help <builtin>" for help on zsh commands
 autoload run-help
+autoload complist
 
 # Use completion cache
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
+# Allow 
+zstyle ':completion:*' menu select=1
 
 export FPATH=~/.zsh/completion:$FPATH
 
@@ -46,7 +49,7 @@ zle -N self-insert url-quote-magic
 
 unsetopt beep
 
-alias vi=vim
+alias vi='vim -X'
 alias ls='ls --color=auto -F --ignore="*.pyc" --ignore="*~"'
 alias less='less -R'
 
@@ -114,6 +117,8 @@ setopt auto_cd \
   auto_resume \
   append_history \
   complete_in_word \
+  always_to_end \
+  list_ambiguous \
   inc_append_history \
   extended_history \
   hist_find_no_dups \

@@ -106,6 +106,11 @@ fun! <SID>DetectIndent()
 
     endwhile
 
+    " Minimum indent of 2 spaces
+    if l:shortest_leading_spaces_run < 2
+        let l:shortest_leading_spaces_run = 2
+    endif
+
     if l:has_leading_tabs && ! l:has_leading_spaces
         " tabs only, no spaces
         setl noexpandtab

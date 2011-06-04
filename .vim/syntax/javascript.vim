@@ -78,7 +78,7 @@ syntax keyword javaScriptNull           null
 syntax keyword javaScriptConditional    if else
 syntax keyword javaScriptRepeat         do while for
 syntax keyword javaScriptBranch         break continue switch case default return
-syntax keyword javaScriptStatement      try catch throw with finally
+syntax keyword javaScriptStatement      try catch throw with finally function
 
 syntax keyword javaScriptGlobalObjects  Array Boolean Date Function Infinity JavaArray JavaClass JavaObject JavaPackage Math Number NaN Object Packages RegExp String Undefined java netscape sun
 
