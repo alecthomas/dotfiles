@@ -108,6 +108,11 @@ zle -N expand-or-complete-with-dots
 bindkey "^I" expand-or-complete-with-dots
 bindkey "^R" history-incremental-search-backward
 
+# Fuzzy completion
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
+
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.zsh/history

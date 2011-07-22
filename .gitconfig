@@ -20,6 +20,7 @@
   ui = !open /Applications/GitX2.app
   co = checkout
   ci = commit
+  ca = commit -a
 [branch]
   autosetupmerge = always
 [merge]
