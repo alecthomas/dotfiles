@@ -21,6 +21,7 @@
   co = checkout
   ci = commit
   ca = commit -a
+  caa = commit -a --amend
 [branch]
   autosetupmerge = always
 [merge]
