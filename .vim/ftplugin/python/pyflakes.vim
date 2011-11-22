@@ -29,6 +29,7 @@ if !exists("b:did_python_init")
     let b:did_python_init = 0
 
     if !has('python')
+        " the pyflakes.vim plugin requires Vim to be compiled with +python
         finish
     endif
 
@@ -47,23 +48,31 @@ if sys.version_info[:2] < (2, 5):
 
 # get the directory this script is in: the pyflakes python module should be installed there.
 scriptdir = os.path.join(os.path.dirname(vim.eval('expand("<sfile>")')), 'pyflakes')
-sys.path.insert(0, scriptdir)
+if scriptdir not in sys.path:
+    sys.path.insert(0, scriptdir)
 
+import ast
 import pep8
-from pyflakes import checker, ast, messages
+from pyflakes import checker, messages
 from operator import attrgetter
 import re
+
+class loc(object):
+    def __init__(self, lineno, col=None):
+        self.lineno = lineno
+        self.col_offset = col
 
 class SyntaxError(messages.Message):
     message = 'could not compile: %s'
     def __init__(self, filename, lineno, col, message):
-        messages.Message.__init__(self, filename, lineno, col)
+        messages.Message.__init__(self, filename, loc(lineno, col))
         self.message_args = (message,)
 
 class Pep8Message(messages.Message):
+    message = '%s'
     def __init__(self, filename, lineno, col, message):
-        self.message = message
-        messages.Message.__init__(self, filename, lineno, col)
+        messages.Message.__init__(self, filename, loc(lineno, col))
+        self.message_args = (message,)
 
 class SilentPep8(pep8.Checker):
     def __init__(self, filename, buffer, messages):
@@ -89,23 +98,22 @@ def check(buffer):
     # assume everything else that follows is encoded in the encoding.
     encoding_found = False
     for n, line in enumerate(contents):
-        if not encoding_found:
-            if re.match(r'^# -\*- coding: .+? -*-|^# encoding: ', line):
-                encoding_found = True
-        else:
-            # skip all preceeding lines 
-            contents = [''] * n + contents[n:]
+        if n >= 2:
             break
+        elif re.match(r'#.*coding[:=]\s*([-\w.]+)', line):
+            contents = ['']*(n+1) + contents[n+1:]
+            break
+
     contents = '\n'.join(contents) + '\n'
 
     vimenc = vim.eval('&encoding')
     if vimenc:
         contents = contents.decode(vimenc)
 
-    builtins = []
+    builtins = set(['__file__'])
     pep8_enabled = 1
     try:
-        builtins = eval(vim.eval('string(g:pyflakes_builtins)'))
+        builtins.update(set(eval(vim.eval('string(g:pyflakes_builtins)'))))
         pep8_enabled = int(vim.eval('g:pyflakes_pep8_enabled'))
     except Exception:
         pass
@@ -114,7 +122,7 @@ def check(buffer):
         # TODO: use warnings filters instead of ignoring stderr
         old_stderr, sys.stderr = sys.stderr, blackhole()
         try:
-            tree = ast.parse(contents, filename)
+            tree = ast.parse(contents, filename or '<unknown>')
         finally:
             sys.stderr = old_stderr
     except:
@@ -128,11 +136,19 @@ def check(buffer):
 
         return [SyntaxError(filename, lineno, offset, str(value))]
     else:
-        w = checker.Checker(tree, filename, builtins = builtins)
+        # pyflakes looks to _MAGIC_GLOBALS in checker.py to see which
+        # UndefinedNames to ignore
+        old_globals = getattr(checker,' _MAGIC_GLOBALS', [])
+        checker._MAGIC_GLOBALS = set(old_globals) | builtins
+
+        w = checker.Checker(tree, filename)
         if pep8_enabled:
             lines = [line + '\n' for line in buffer]
             p8 = SilentPep8(filename, lines, w.messages)
             p8.check_all()
+
+        checker._MAGIC_GLOBALS = old_globals
+
         w.messages.sort(key = attrgetter('lineno'))
         return w.messages
 
@@ -216,6 +232,7 @@ if !exists("*s:ActivatePyflakesQuickFixWindow")
         try
             silent colder 9 " go to the bottom of quickfix stack
         catch /E380:/
+        catch /E788:/
         endtry
 
         if s:pyflakes_qf > 0
@@ -262,7 +279,7 @@ for w in check(vim.current.buffer):
     vim.command("let l:qf_item.text = '%s'" % vim_quote(w.message % w.message_args))
     vim.command("let l:qf_item.type = 'E'")
 
-    if w.col is None or isinstance(w, SyntaxError):
+    if getattr(w, 'col', None) is None or isinstance(w, SyntaxError):
         # without column information, just highlight the whole line
         # (minus the newline)
         vim.command(r"let s:mID = matchadd('PyFlakes', '\%" + str(w.lineno) + r"l\n\@!')")

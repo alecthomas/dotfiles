@@ -39,17 +39,13 @@ fun! LoadTemplateFile()
         let template_file = "templates/skel." . extension
         let template_func = "TemplateFileFunc_" . extension
     endif
-    if filereadable(expand($VIMTEMPLATE . template_file))
-        call LoadTemplateFileConfirm($VIMTEMPLATE . template_file)
-    elseif filereadable(expand($HOME . "/.vim/" . template_file))
-        call LoadTemplateFileConfirm($HOME . "/.vim/" . template_file)
-    elseif filereadable(expand($VIM . template_file))
-        call LoadTemplateFileConfirm($VIM . template_file)
-    elseif filereadable(expand($VIMRUNTIME . template_file))
-        call LoadTemplateFileConfirm($VIMRUNTIME . template_file)
-    else
-        " Template not found
-    endif
+    for l:dir in split(&runtimepath, ',')
+        let l:file = dir . '/' . template_file
+        if filereadable(l:file)
+            call LoadTemplateFileConfirm(l:file)
+            break
+        endif
+    endfor
 
     let date = strftime("%c")
     let year = strftime("%Y")

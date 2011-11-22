@@ -5,30 +5,42 @@
 
 [core]
   excludesfile = ~/.gitignorerc
+  mergeoptions = --no-ff
 [user]
   name = Alec Thomas
-  email = alec@swapoff.org
+  email = alec@twitter.com
 [sendemail]
   smtpserver = smtp.gmail.com
-  smtpuser = alec@swapoff.org
+    smtpuser = alec@twitter.com
   smtpencryption = ssl
 [log]
   decorate = true
 [alias]
   st = status
   br = branch
-  ui = !open /Applications/GitX2.app
+  ui = !open -a GitX
   co = checkout
   ci = commit
   ca = commit -a
   caa = commit -a --amend
+  log = log --topo-order --first-parent --graph --decorate
+  sl = log --format=oneline
+  ds = diff --stat
+  dm = diff master
+  names = diff master --name-only
+  dms = diff master --stat
 [branch]
-  autosetupmerge = always
+	autosetupmerge = true
 [merge]
-  tool = opendiff
+	tool = diffmerge
 [giggle]
   main-window-maximized = false
   main-window-geometry = 1441x975+365+106
   history-view-vpane-position = 539
   main-window-view = HistoryView
   file-view-vpane-position = 346
+[push]
+  default = current
+[mergetool "diffmerge"]
+	cmd = diffmerge --merge --result=$MERGED $LOCAL $BASE $REMOTE
+	trustExitCode = true

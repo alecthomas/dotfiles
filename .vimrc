@@ -70,7 +70,7 @@ set shortmess=a
 
 " Use insert key to toggle paste mode
 if has('gui_macvim')
-  set transparency=30
+  set transparency=20
   set pastetoggle=<Help>
   set guifont=Menlo:h12
   set antialias
@@ -214,7 +214,10 @@ set go-=T
 "source /Users/aat/Downloads/ropevim/ropevim.vim
 
 " Used for Command-T
-set wildignore=*.o,*.a,*.so,*.pyc,*~,*.class,build/*,build-*,tags,cscope*,third_party/*,java/*,users/*,data/*
+" Open files in tabs
+let g:CommandTAcceptSelectionMap = '<C-t>'
+let g:CommandTAcceptSelectionTabMap = '<CR>'
+set wildignore=*.o,*.a,*.so,*.pyc,*~,*.class,build/*,build-*,tags,cscope*,third_party/*,java/*,users/*,data/*,3rdparty/*,*.jar,target/*,dist/*
 map <silent> <C-J> <Leader>t
 
 " Jump to a symbol from the CScope database: eg. :Sym Nilsimsa

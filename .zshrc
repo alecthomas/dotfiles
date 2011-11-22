@@ -173,7 +173,7 @@ f() {
 
 # g <regex> [<path>]
 g() {
-  grep -iIE $1 $(f \* ${2-.})
+  f \* ${2-.} | xargs -0 grep -iIE $1
 }
 
 if [ -r ~/.zsh/$(uname).zshrc ]; then

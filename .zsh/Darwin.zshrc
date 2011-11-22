@@ -6,6 +6,12 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 # Case insensitive completion on Mac
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 alias ls='ls -FG'
+function mvim() {
+  if [ $# != 0 ]; then
+    args="--remote-tab-silent"
+  fi
+  ~/bin/mvim $args $@
+}
 # Fix shitty ps. Probably other commands.
 export COMMAND_MODE=unix2003
 export PATH=$PATH:/usr/local/sbin

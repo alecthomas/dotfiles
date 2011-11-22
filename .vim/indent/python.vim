@@ -93,7 +93,7 @@ function! GetPythonIndent(lnum)
     if line(".") != plnum
       return indent(plnum)
     " For long lines, don't line up with opening parenthesis.
-    elseif parcol > 40
+    elseif parcol > 0
       return indent(plnum) + (&sw * 2)
     else
       if match(getline(a:lnum), '^\s*[])}]') != -1

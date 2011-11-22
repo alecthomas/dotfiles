@@ -35,3 +35,4 @@ GSYMS
 .todo
 .todo2
 ?.cc
+.pantsenv/
