@@ -1,7 +1,6 @@
 history
 *.jax
 *.pyc
-.vim/work
 .vim/doc/tags
 zshrc.local
 .zsh/history*

@@ -76,6 +76,8 @@ if has('gui_macvim')
   set antialias
   " PeepOpen support
   map <D-e> <Plug>PeepOpen
+  " Open tags in new tabs
+  nmap <C-]> <C-w><C-]><C-w>T
 else
   set pastetoggle=<Ins>
 endif
