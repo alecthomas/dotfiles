@@ -66,7 +66,7 @@ set ts=2 sts=2 sw=2 et
 map K K<CR>
 
 " Abbreviate status messages
-set shortmess=a
+set shortmess=aTI
 
 " Use insert key to toggle paste mode
 if has('gui_macvim')
@@ -78,6 +78,10 @@ if has('gui_macvim')
   map <D-e> <Plug>PeepOpen
   " Open tags in new tabs
   nmap <C-]> <C-w><C-]><C-w>T
+  " Disable scrollbar
+  set guioptions-=r 
+  " Cmd+/ toggle comment
+  map <D-/> ,c<Space>
 else
   set pastetoggle=<Ins>
 endif
@@ -146,6 +150,7 @@ inoremap <C-Space> <C-x><C-o>
 
 " Default to using keyword completion
 let g:SuperTabDefaultCompletionType = "<C-X><C-N>"
+let g:SuperTabCrMapping = 0
 
 let xml_use_xhtml = 1
 
@@ -227,3 +232,13 @@ map <silent> <C-J> <Leader>t
 
 " Jump to a symbol from the CScope database: eg. :Sym Nilsimsa
 command! -nargs=1 Sym cscope find g <args>
+
+" Clang complete configuration
+let g:clang_periodic_quickfix=1
+let g:clang_library_path='/usr/local/Cellar/llvm/3.0/lib'
+let g:clang_use_library=1
+
+call pathogen#infect()
+
+let g:syntastic_enable_signs=0
+let g:syntastic_enable_highlighting = 1

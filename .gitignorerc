@@ -33,5 +33,6 @@ GSYMS
 .settings
 .todo
 .todo2
+.todo2~
 ?.cc
 .pantsenv/
