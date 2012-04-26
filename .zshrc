@@ -29,6 +29,8 @@ colors
 # Ignore these extensions during tab completion
 fignore=('.pyc' '.sw?' '.6' '.8')
 
+# VI mode
+bindkey -v
 # press M-CR to accept and keep the completion going
 bindkey '\e^M' accept-and-menu-complete
 # The VI variants refuse to backspace over existing text. This is shit.
@@ -81,16 +83,15 @@ precmd() {
 
 PROMPT="%(2v:<+%2v>:)[%n@%B%m%b:%1v]"
 
-which todo > /dev/null 2>&1
+which todo2 > /dev/null 2>&1
 HAVE_TODO=$?
 which ondir > /dev/null 2>&1
 HAVE_ONDIR=$?
 
 if [ $HAVE_TODO = 0 -o $HAVE_ONDIR = 0 ]; then
-    TODO_OPTIONS="--timeout 5 --timeout --summary"
     chpwd() {
       [ -t 1 ] || return
-      [ $HAVE_TODO = 0 -a -r .todo ] && todo ${=TODO_OPTIONS}
+      [ $HAVE_TODO = 0 -a \( -r .todo -o -r .todo2 \) ] && todo2 --summary
       [ $HAVE_ONDIR = 0 ] && eval "`ondir \"$OLDPWD\" \"$PWD\"`"
     }
     chpwd
@@ -112,9 +113,6 @@ bindkey "^R" history-incremental-search-backward
 zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:match:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
-
-# Make git completion much faster
-__git_files() {}
 
 HISTSIZE=10000
 SAVEHIST=10000

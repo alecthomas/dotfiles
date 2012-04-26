@@ -5,10 +5,10 @@
 
 [core]
   excludesfile = ~/.gitignorerc
-  mergeoptions = --no-ff
+  # mergeoptions = --no-ff
 [user]
-  name = Alec Thomas
-  email = alec@twitter.com
+	name = Alec Thomas
+	email = alec@swapoff.org
 [sendemail]
   smtpserver = smtp.gmail.com
     smtpuser = alec@twitter.com

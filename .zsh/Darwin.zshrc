@@ -6,17 +6,49 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 # Case insensitive completion on Mac
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 alias ls='ls -FG'
+# This is the most stupid thing ever. Default behaviour is sort by PID??!? What the fuck BSD?
+alias top='top -u'
 function mvim() {
-  if [ $# != 0 ]; then
+  local args
+  if [ $# -ne 0 ]; then
     args="--remote-tab-silent"
   fi
   ~/bin/mvim $args $@
 }
 # Fix shitty ps. Probably other commands.
 export COMMAND_MODE=unix2003
-export PATH=$PATH:/usr/local/sbin
+export MANPATH=/usr/local/man:
+export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
 # Adds some homebrew custom commands, in particular "brew linkapps"
 if which brew > /dev/null; then
   export PATH=$PATH:$(brew --repository)/Library/Contributions/examples
 fi
+
+
+g() {
+  if [ -z "$1" ]; then
+    echo "usage: g <query> [<dir>]"
+    return 1
+  fi
+  mdfind -onlyin "${2:-$PWD}" "$1"
+}
+
+f() {
+  local pattern="$1"
+  local dir="${2:-$PWD}"
+  if [ -z "$pattern" ]; then
+    find "$dir" -type f
+    return 0
+  elif [ -z "$dir" ]; then
+    if [ -d "$pattern" ]; then
+      dir="$pattern"
+      unset pattern
+    fi
+  fi
+  if [ -z "$pattern" ]; then
+    find "$dir" -type f
+  else
+    find "$dir" -path "*$pattern*" -type f
+  fi
+}

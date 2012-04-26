@@ -56,3 +56,5 @@ hi link SpecialChar Special
 hi link Delimiter   Special
 hi link SpecialComment  Special
 hi link Debug       Special
+
+highlight Pmenu ctermbg=238 gui=bold guifg=Grey guibg=#606060
