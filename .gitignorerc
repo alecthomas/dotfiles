@@ -9,7 +9,6 @@ nosetests.out
 dist/
 ?.py
 *.o
-*.a
 *.[568vq]
 [568vq].out
 *.cgo1.go

@@ -8,10 +8,10 @@
   mergeoptions = --no-ff
 [user]
   name = Alec Thomas
-  email = alec@twitter.com
+  email = alec@swapoff.org
 [sendemail]
   smtpserver = smtp.gmail.com
-    smtpuser = alec@twitter.com
+    smtpuser = alec@swapoff.org
   smtpencryption = ssl
 [log]
   decorate = true

@@ -196,6 +196,9 @@ map <silent> <D-7> 7gt
 map <silent> <D-8> 8gt
 map <silent> <D-9> 9gt
 
+" Toggle comments
+map <D-/> ,c<Space>
+
 " Nerd tree
 let NERDTreeQuitOnOpen=1
 map <silent> <F2> :NERDTreeToggle<CR>

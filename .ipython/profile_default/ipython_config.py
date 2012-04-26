@@ -202,7 +202,7 @@ c.TerminalInteractiveShell.colors = 'Linux'
 # c.TerminalInteractiveShell.separate_out = ''
 
 # 
-c.TerminalInteractiveShell.prompt_in1 = '>>> '
+c.PromptManager.in_template = '>>> '
 
 # Enable deep (recursive) reloading by default. IPython can use the deep_reload
 # module which reloads changes in modules recursively (it replaces the reload()
@@ -299,7 +299,7 @@ c.TerminalInteractiveShell.confirm_exit = False
 # c.TerminalInteractiveShell.object_info_string_level = 0
 
 # 
-c.TerminalInteractiveShell.prompt_out = ''
+c.PromptManager.out_template = ''
 
 # Set the size of the output cache.  The default is 1000, you can change it
 # permanently in your config file.  Setting it to 0 completely disables the
