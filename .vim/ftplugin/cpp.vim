@@ -1,2 +1,2 @@
 setlocal cscopetag
-match ErrorMsg '\%>80v.\+'
+"match ErrorMsg '\%>80v.\+'

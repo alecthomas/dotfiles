@@ -208,11 +208,11 @@ pprint 1
 
 # Use \# to represent the current prompt number, and quote them to protect
 # spaces.
-prompt_in1 '>>> '
+prompt_in_template '>>> '
 
 # \D is replaced by as many dots as there are digits in the
 # current value of \#.
-prompt_in2 '.\D.     '
+# prompt_in2 '.\D.     '
 
 prompt_out ''
 

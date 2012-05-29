@@ -7,11 +7,11 @@
   excludesfile = ~/.gitignorerc
   mergeoptions = --no-ff
 [user]
-	name = Alec Thomas
-	email = alec@swapoff.org
+  name = Alec Thomas
+  email = alec@swapoff.org
 [sendemail]
   smtpserver = smtp.gmail.com
-    smtpuser = alec@twitter.com
+  smtpuser = alec@swapoff.org
   smtpencryption = ssl
 [log]
   decorate = true
@@ -30,9 +30,9 @@
   names = diff master --name-only
   dms = diff master --stat
 [branch]
-	autosetupmerge = true
+  autosetupmerge = true
 [merge]
-	tool = diffmerge
+  tool = diffmerge
 [giggle]
   main-window-maximized = false
   main-window-geometry = 1441x975+365+106
@@ -42,9 +42,5 @@
 [push]
   default = current
 [mergetool "diffmerge"]
-	cmd = diffmerge --merge --result=$MERGED $LOCAL $BASE $REMOTE
-	trustExitCode = true
-[mergetool "araxis"]
-  cmd = araxisgitmerge "$PWD/$REMOTE" "$PWD/$BASE" "$PWD/$LOCAL" "$PWD/$MERGED"
-  trustExitCode = false
-
+  cmd = diffmerge --merge --result=$MERGED $LOCAL $BASE $REMOTE
+  trustExitCode = true

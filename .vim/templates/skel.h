@@ -11,12 +11,8 @@
 #ifndef _@FILE@__h_
 #define _@FILE@__h_
 
+namespace julpan {
 
-class @FILE@ {
- public:
-  @FILE@();
-  ~@FILE@();
- private:
-};
+}
 
 #endif
