@@ -82,6 +82,8 @@ if has('gui_macvim')
   set guioptions-=r 
   " Cmd+/ toggle comment
   map <D-/> ,c<Space>
+  let g:CommandTAcceptSelectionMap = '<C-t>'
+  let g:CommandTAcceptSelectionTabMap = '<CR>'
 else
   set pastetoggle=<Ins>
 endif
@@ -165,19 +167,23 @@ highlight ExtraWhitespace cterm=NONE ctermbg=red guibg=red
 autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 " PySmell options and supertab integration
-set completeopt=menuone,longest,preview
+set completeopt=menuone,longest
 
 " Change to working directory of current buffer. Very useful.
 " set autochdir
 
 " Configure syntastic code checking
-let g:syntastic_enable_signs=1
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
+let g:syntastic_enable_highlighting=1
+let g:syntastic_enable_signs=0
+let g:syntastic_cpp_auto_refresh_includes = 1
+let g:syntastic_cpp_check_header = 1
+let g:syntastic_cpp_config_file = '.clang_complete'
+let g:syntastic_cpp_remove_include_errors = 1
 
-" Try to keep 2 lines of context when scrolling
-set scrolloff=2
+" Clang complete configuration
+let g:clang_periodic_quickfix=0
+let g:clang_library_path="/usr/lib"
+let g:clang_use_library=1
 
 " Round shifting to nearest shiftwidth
 set shiftround
@@ -222,20 +228,10 @@ set go-=T
 
 " Used for Command-T
 " Open files in tabs
-let g:CommandTAcceptSelectionMap = '<C-t>'
-let g:CommandTAcceptSelectionTabMap = '<CR>'
 set wildignore=*.o,*.a,*.so,*.pyc,*~,*.class,build/*,build-*,tags,cscope*,third_party/*,java/*,users/*,data/*,3rdparty/*,*.jar,target/*,dist/*
 map <silent> <C-J> <Leader>t
 
 " Jump to a symbol from the CScope database: eg. :Sym Nilsimsa
 command! -nargs=1 Sym cscope find g <args>
 
-" Clang complete configuration
-let g:clang_periodic_quickfix=1
-let g:clang_library_path='/usr/local/Cellar/llvm/3.0/lib'
-let g:clang_use_library=1
-
 call pathogen#infect()
-
-let g:syntastic_enable_signs=0
-let g:syntastic_enable_highlighting = 1

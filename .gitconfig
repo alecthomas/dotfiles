@@ -5,7 +5,7 @@
 
 [core]
   excludesfile = ~/.gitignorerc
-  # mergeoptions = --no-ff
+  mergeoptions = --no-ff
 [user]
 	name = Alec Thomas
 	email = alec@swapoff.org
@@ -44,3 +44,7 @@
 [mergetool "diffmerge"]
 	cmd = diffmerge --merge --result=$MERGED $LOCAL $BASE $REMOTE
 	trustExitCode = true
+[mergetool "araxis"]
+  cmd = araxisgitmerge "$PWD/$REMOTE" "$PWD/$BASE" "$PWD/$LOCAL" "$PWD/$MERGED"
+  trustExitCode = false
+
