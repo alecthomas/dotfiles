@@ -20,8 +20,12 @@ export COMMAND_MODE=unix2003
 export MANPATH=/usr/local/man:
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
+if which xcode-select &> /dev/null; then
+  export PATH=$(xcode-select -print-path)/usr/bin:$PATH
+fi
+
 # Adds some homebrew custom commands, in particular "brew linkapps"
-if which brew > /dev/null; then
+if which brew &> /dev/null; then
   export PATH=$PATH:$(brew --repository)/Library/Contributions/examples
 fi
 

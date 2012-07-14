@@ -5,6 +5,8 @@ if filereadable(expand('~/.vimrc.local'))
   so ~/.vimrc.local
 endif
 
+let mapleader=","
+
 let g:pyflakes_use_quickfix = 0
 
 " Enable snippeting
@@ -184,6 +186,7 @@ let g:syntastic_cpp_remove_include_errors = 1
 let g:clang_periodic_quickfix=0
 let g:clang_library_path="/usr/lib"
 let g:clang_use_library=1
+let g:clang_complete_auto=0
 
 " Round shifting to nearest shiftwidth
 set shiftround

@@ -29,6 +29,9 @@
   dm = diff master
   names = diff master --name-only
   dms = diff master --stat
+  l = log --graph --decorate --oneline
+  la = log --graph --decorate --oneline --all
+
 [branch]
   autosetupmerge = true
 [merge]
