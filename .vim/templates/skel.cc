@@ -10,3 +10,8 @@
 
 #include "@FILE@.h"
 
+@FILE@::@FILE@() {
+}
+
+@FILE@::~@FILE@() {
+}

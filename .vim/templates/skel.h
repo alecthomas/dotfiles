@@ -8,11 +8,12 @@
  * Author: Alec Thomas <alec@swapoff.org>
  */
 
-#ifndef _@FILE@__h_
-#define _@FILE@__h_
+#pragma once
 
-namespace julpan {
+class @FILE@ {
+ public:
+  @FILE@();
+  virtual ~@FILE@();
 
-}
-
-#endif
+ private:
+};
