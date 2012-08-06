@@ -1,3 +1,5 @@
+.ipython/profile_default
+.zsh/cache
 history
 *.jax
 *.pyc
