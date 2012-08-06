@@ -181,6 +181,9 @@ let g:syntastic_cpp_auto_refresh_includes = 1
 let g:syntastic_cpp_check_header = 1
 let g:syntastic_cpp_config_file = '.clang_complete'
 let g:syntastic_cpp_remove_include_errors = 1
+let g:syntastic_mode_map = { 'mode': 'active',
+      \ 'active_filetypes': [],
+      \ 'passive_filetypes': ['scala'] }
 
 " Clang complete configuration
 let g:clang_periodic_quickfix=0
