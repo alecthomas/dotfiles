@@ -1,0 +1,112 @@
+#compdef launchctl
+
+# W. G. Scott
+# July 18 2005
+
+_launchctl(){
+  local -a _1st_arguments 
+  _1st_arguments=(
+    'load:Load configuration files and/or directories'
+	'unload:Unload configuration files and/or directories'
+	'start:Start specified jobs'
+	'stop:Stop specified jobs'
+	'list:List jobs and information about jobs'
+	'setenv:Set an environmental variable in launchd'
+	'unsetenv:Unset an environmental variable in launchd'
+	'getenv:Get an environmental variable from launchd'
+	'export:Export shell settings from launchd'
+	'limit:View and adjust launchd resource limits'
+	'stdout:Redirect launchd standard out to the given path'
+	'stderr:Redirect launchd standard error to the given path'
+	'shutdown:Prepare for system shutdown'
+	'reloadttys:Reload /etc/ttys'
+	'getrusage:Get resource usage statistics from launchd'
+	'log:Adjust the logging level or mask of launchd'
+	'umask:Change launchd umask'
+	'help:Brief help output' 
+	)
+	
+ 
+  
+  if (( CURRENT == 2 )); then
+     _describe -t commands "launchctl subcommands" "_1st_arguments"
+          return
+  fi 
+  
+   case "$words[2]" in
+   
+    (load*|unload*)
+        if [[ $words != *-w* ]];then
+            _message "Optional [-w] will (dis)able while (un)loading plist file"  
+        fi 
+      _arguments \
+    '-w[unload and disable or load and enable]: :->subcmds' \
+    '*: :->subcmds' 
+    
+      case "$state" in
+            (subcmds)
+                 if [[ -f $(command ls *.plist | head -n 1) ]];then
+                    _wanted files expl "launchd plist files in $PWD"  _files -g '*.plist'  
+            
+                else
+                     _wanted files expl 'System-wide launchd plist files' _files -g \
+                    '*.plist /System/Library/Launch*/*.plist /Library/Launch*/*.plist  ~/Library/Launch*/*.plist'
+            
+                 fi
+          ;;
+     esac
+
+    ;;
+    
+    (start|stop)
+        _wanted commands expl '--- Choose a launchd job ---' \
+           compadd  $(launchctl list) 
+    ;;
+    
+    #(list);;  #takes no arguments
+    
+    (setenv)  _message "enter an ENV variable and its intended value" ;;
+    
+    (unsetenv|getenv) _message "enter an ENV variable" ;;
+    
+    #(export);; #takes no arguments
+    
+    (getrusage)
+        _wanted commands expl '--- Choose one option ---' \
+           compadd  self children 
+    ;;
+    
+    (log)
+        if [[ $words == *level* ]]; then
+          _wanted commands expl '--- Choose one option ---' \
+          compadd -Q  ' debug' ' info' ' notice' ' warning' ' error' ' critical' ' alert' ' emergency'
+        else  
+           _wanted commands expl '--- Choose one option ---' \
+           compadd -Q -p 'level'  ' debug' ' info' ' notice' ' warning' ' error' ' critical' ' alert' ' emergency'
+        fi
+    ;;
+    
+    (limit)
+    _wanted commands expl '--- Choose one option ---' \
+    compadd cpu  filesize  data  stack  core  rss  memlock  maxproc  maxfiles     
+    ;;
+    
+    (stdout|stderr)
+        _wanted files expl "enter a filename to capture the output or choose an existing file" _files -g '*'
+    ;;
+ 
+    #(shutdown);; #takes no arguments
+    
+    #(reloadttys);; #takes no arguments
+    
+    (umask) _message "set new umask value" ;;
+    
+    #(help);; #takes no arguments
+
+   esac
+   
+}
+
+_launchctl "$@"
+
+

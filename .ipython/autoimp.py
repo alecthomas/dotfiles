@@ -2,20 +2,21 @@
 """
 autoimp -- Import all modules, load them lazily at first use.
 
-Public domain, Connelly Barnes 2006.  Works with Python 2.1 - 2.5.
+Public domain, Connelly Barnes 2006-2015.  Works with Python 2.7, 3.3.
 
-I got sick of writing "import X" in Python.  To solve this problem,
-one can now write
+It can be tedious to import modules repeatedly at interactive Python prompts.
+To solve this problem, one can now write:
 
   >>> from autoimp import *
   >>> os.stat('.')                     # Module loaded at first use.
-  >>> Image.open('test.bmp')           # Module loaded at first use.
+  >>> numpy.zeros(5)                   # Module loaded at first use.
+  >>> np.zeros(5)                      # 'np' is an alias for 'numpy'.
   >>> pylab.plot([1,2],[3,4])          # Module loaded at first use.
   >>> scipy.linalg.eig([[1,2],[3,4]])  # Module loaded at first use.
   >>> os.stat('..')                    # Module has already been
   >>> ...                              # imported -- subsequent uses
   >>>                                  # of os are fast.
-
+  
 The command "from autoimp import *" imports all modules found in
 sys.path lazily.  This is done by placing lazy-import proxy objects
 in the namespace of module autoimp.  The modules are actually loaded
@@ -24,19 +25,10 @@ when they are first used.  For ultimate laziness, place the command
 interactive session has all modules available by default.
 
 One can also use "from autoimp import *" in Python source files.  This
-works correctly with documentation utilities such as pydoc and epydoc
-(one should define __all__ to keep auto-imported modules from leaking
-into the documentation).  One cannot currently use autoimp with py2exe
-or pyinstaller, because the installers cannot determine which modules
-are imported.
+is not recommended because it can result in more brittle code or be slow.
 
 Auto-importing works on all of the packages which I tested (CGKit,
-Numpy, Scipy, OpenGL, PIL, Pygame, ODE).  The wrapping class itself
-works by sharing its __dict__ special attribute with the module; thus
-there is little impact on the speed of the user's code (I benchmarked
-the time to call (lambda: math.cos(1.0)); the function ran 1.022
-million times per sec without autoimp, and 1.048 million times per sec
-with autoimp on my Pentium 3 3.0 GHz Windows machine).
+Numpy, Scipy, OpenGL, PIL, Pygame, ODE, scikit-image).
 
 Note that the default behavior of "autoimp" is somewhat invasive: it
 wraps all modules AND all sub-modules in the wrapper class
@@ -50,17 +42,18 @@ lazily imported as well:
 Finally, note that modules with leading underscores are not imported
 (with the exception of __builtin__, __main__, and __future__), nor are
 modules which have the same name as a builtin, such as "repr".  Also
-reload() and help() are defined and exported by this module, so that
-the these commands "do the right thing" when used with proxy import
-objects.  The modified reload calls the __reload__() special method
-on its argument (if available) and likewise for the help() function.
+reload(), help(), and dir() are defined and exported by this module,
+so that the these commands "do the right thing" when used with proxy
+import objects.
 
-Send bugs, patches, suggestions to: connellybarnes at domain yahoo.com.
+Please submit bugs and patches to the GitHub project.
 
 """
 
-__version__ = '1.0.2'
+__version__ = '1.0.4'
 __all__ = ['reload']         # Lazily imported modules will go here
+
+_aliases = {'np': 'numpy'}
 
 #TODO: .PY .pY .Py, various capitalizations of Python modules/packages.
 #TODO: Test a whole lot on examples of lots of libraries.  Also test with
@@ -74,7 +67,10 @@ import os as _os
 import sys as _sys
 import imp as _imp
 import types as _types
-import __builtin__ as _builtin
+try:
+  import __builtin__ as _builtin
+except ImportError:
+  import builtins as _builtin
 #from distutils.sysconfig import get_config_var as _get_config_var
 
 # Modules with names of the form __name__ which are part of Python's lib.
@@ -112,7 +108,7 @@ class _RecursiveLazyModule:
     # Set the self.__lib attribute to lib.
     if lib is not None:
       # Share __dict__ with the imported object.
-      self.__dict__ = lib.__dict__
+      self.__dict__.update(lib.__dict__)
       self.__dict__['_autoimp_lib'] = lib
     else:
       self.__dict__['_autoimp_lib'] = None
@@ -196,6 +192,19 @@ def _add_module_if_pymodule(L, path, modname, ext, zipnames=None):
             break
 
 
+if _sys.version_info[:2] >= (3, 0):
+  _dir = dir
+  def dir(obj):
+    """
+    Replacement for built-in dir().
+    """
+    try:
+      obj.__load_lib()
+    except:
+      pass
+    return _dir(obj)
+  __all__.append('dir')
+
 def _list_modules_in_path(path):
   """
   Return list of all modules in filesystem path.
@@ -247,7 +256,7 @@ def _all_modules():
   for x in ans:
     tried[x] = None
   for x in _BUILTIN_COMPILED_MODULES:
-    if not tried.has_key(x):
+    if not x in tried:
       tried[x] = None
       try:
         _imp.find_module(x)
@@ -274,6 +283,10 @@ def _import_all():
       d[mod] = _RecursiveLazyModule(mod)
       __all__.append(mod)
 
+  for (_alias_source, _alias_target) in _aliases.items():
+    if _alias_target in d:
+      d[_alias_source] = d[_alias_target]
+      __all__.append(_alias_source)
 
 def _export_builtins():
   """
@@ -283,7 +296,13 @@ def _export_builtins():
     setattr(_builtin, k, globals()[k])
 
 
-_reload = reload
+try:
+  _reload = reload
+except:
+  try:
+    from importlib import reload as _reload
+  except:
+    from imp import reload as _reload
 
 def reload(x):
   """
@@ -314,7 +333,6 @@ if _sys.version_info[:2] >= (2, 2):
 
 _import_all()
 
-
 # -------------------------------------------------------------------
 # Unit tests
 # -------------------------------------------------------------------
@@ -324,7 +342,7 @@ def _require_importable(L):
   Given a list of module names, make sure each one can be imported.
   """
   for x in L:
-    exec "dir(" + x + ")"
+    exec("dir(" + x + ")")
 
 
 def _require_not_importable(L):
@@ -333,7 +351,7 @@ def _require_not_importable(L):
   """
   for x in L:
     try:
-      exec "dir(" + x + ")"
+      exec("dir(" + x + ")")
       ok = 0
     except NameError:
       ok = 1
@@ -352,58 +370,15 @@ def _test_pythonlib():
 #  assert isinstance(os.path.os.path.os.path.os.path, _RecursiveLazyModule)
   os.path.os.path.os.path.os.stat('.')
   assert operator.add(1, 2) == 3
-  assert binascii.crc32('abc') == 891568578
   v = [1, 2]
   assert copy.copy(v) is not v and copy.copy(v) == v
-  assert struct.pack('!h', 97) == '\000a'
   assert (xml.dom.minidom.parseString('<a>b</a>').documentElement.tagName
           == u'a')
 
   # Check that the appropriate modules can be lazily imported.
   L = """
-  __builtin__ __future__ __main__ aifc anydbm array asynchat asyncore atexit
-  audioop base64 BaseHTTPServer binascii binhex bisect bsddb calendar cgi
-  CGIHTTPServer chunk cmath cmd code codecs codeop colorsys compileall
-  ConfigParser Cookie copy copy_reg cPickle cStringIO difflib dircache dis
-  distutils.command distutils.command.bdist distutils distutils.cmd
-  distutils.command.bdist_dumb distutils.command.clean distutils.core
-  distutils.util distutils.version doctest dumbdbm encodings errno
-  exceptions filecmp fileinput fnmatch formatter fpformat ftplib gc getopt
-  getpass gettext glob gzip htmlentitydefs htmllib httplib imageop imaplib
-  imghdr imp inspect keyword linecache locale mailbox mailcap marshal math
-  md5 mhlib mimetools mimetypes MimeWriter mimify mmap multifile mutex netrc
-  nntplib operator os.path os parser pdb pickle poplib pprint profile pstats
-  py_compile pyclbr pydoc Queue quopri random re repr rexec rfc822
-  robotparser sched select sgmllib sha shelve shlex shutil signal
-  SimpleHTTPServer site smtpd smtplib sndhdr socket SocketServer stat
-  statvfs string StringIO struct symbol sys tabnanny telnetlib tempfile test
-  textwrap thread threading time token
-  tokenize traceback types unicodedata unittest urllib urllib2 urlparse user
-  UserDict UserList UserString uu warnings wave weakref webbrowser whichdb
-  xdrlib xml.dom.minidom xml.dom xml.sax.saxutils xml.sax zipfile zlib
+  bisect cmath re random pickle stat os.path os socket zlib zipfile
   """.split()
-
-  # Test more modules for Python versions above 2.1.
-  if _sys.version_info[:2] >= (2, 2):
-    L += """
-    HTMLParser SimpleXMLRPCServer cgitb compiler compiler.ast compiler.visitor
-    email email.Charset email.Encoders hmac hotshot hotshot.stats xmlrpclib
-    """.split()
-
-  if _sys.version_info[:2] >= (2, 3):
-    L += """
-    DocXMLRPCServer bz2 csv datetime dummy_thread dummy_threading encodings.idna
-    heapq itertools logging modulefinder new optparse pickletools pkgutil
-    platform sets stringprep tarfile timeit trace zipimport
-    """.split()
-
-  if _sys.version_info[:2] >= (2, 4):
-    L += 'collections cookielib decimal subprocess email.Charset'.split()
-
-  if _sys.version_info[:2] >= (2, 5):
-    L += """
-    cProfile contextlib ctypes email.charset email.encoders hashlib runpy
-    """.split()
 
   _require_importable(L)
   _require_not_importable("""dsfajsk zckaz askad.akjl akjlsd.dfjdf""".split())
@@ -411,14 +386,14 @@ def _test_pythonlib():
   reload(os)
   reload(_os)
 
-  def f():
-    pass
-
-  global sys
-  sys.exitfunc = f
-  import sys
-  assert sys.exitfunc is f
-
+#  def f():
+#    pass
+#
+#  global sys
+#  sys.exitfunc = f
+#  import sys
+#  assert sys.exitfunc is f
+  print('Unit tests passed')
 
 def _test_thirdparty():
   """

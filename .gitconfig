@@ -6,8 +6,11 @@
 [core]
   excludesfile = ~/.gitignorerc
   mergeoptions = --no-ff
+	editor = vim
+	autocrlf = input
+	ignorecase = false
 [user]
-  name = Alec Thomas
+	name = Alec Thomas
   email = alec@swapoff.org
 [sendemail]
   smtpserver = smtp.gmail.com
@@ -16,6 +19,10 @@
 [log]
   decorate = true
 [alias]
+  rc = rebase --continue
+  ra = rebase --abort
+  p = push --follow-tags
+  pp = !git pull --rebase && git push --follow-tags
   st = status
   br = branch
   ui = !open -a GitX
@@ -26,16 +33,22 @@
   log = log --topo-order --first-parent --graph --decorate
   sl = log --format=oneline
   ds = diff --stat
-  dm = diff master
+  dm = !git diff $(git merge-base master HEAD)
+  do = diff origin
   names = diff master --name-only
   dms = diff master --stat
   l = log --graph --decorate --oneline
   la = log --graph --decorate --oneline --all
+  rc = rebase --continue
+  rbm = rebase master
+  dh = diff HEAD
+  exec = "!exec "
+  mt = mergetool
+  untracked = ls-files --others --exclude-standard
 
 [branch]
   autosetupmerge = true
-[merge]
-  tool = diffmerge
+  autosetuprebase = always
 [giggle]
   main-window-maximized = false
   main-window-geometry = 1441x975+365+106
@@ -47,3 +60,34 @@
 [mergetool "diffmerge"]
   cmd = diffmerge --merge --result=$MERGED $LOCAL $BASE $REMOTE
   trustExitCode = true
+[difftool "Kaleidoscope"]
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[diff]
+	tool = Kaleidoscope
+[difftool]
+	prompt = false
+[mergetool "Kaleidoscope"]
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustExitCode = true
+[mergetool]
+	prompt = false
+[merge]
+	tool = Kaleidoscope
+[credential]
+	helper = osxkeychain
+[filter "media"]
+	required = true
+	clean = git media clean %f
+	smudge = git media smudge %f
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true
+[filter "lfs"]
+	clean = git lfs clean %f
+	smudge = git lfs smudge %f
+	required = true
+[github]
+	user = alecthomas
+[ghi]
+	token = !security find-internet-password -a alecthomas -s github.com -l 'ghi token' -w

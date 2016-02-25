@@ -1,4 +1,6 @@
 .DS_Store
+.sublimelinterrc
+build
 .coverage
 .venv
 *.pyc
@@ -21,9 +23,8 @@ _obj
 _test
 _testmain.go
 *.exe
-tags
+/tags
 cscope.out
-[t-z]
 GTAGS
 GPATH
 GRTAGS
@@ -36,3 +37,15 @@ GSYMS
 .todo2~
 ?.cc
 .pantsenv/
+.tags
+.tags_sorted_by_file
+Vagrantfile
+.vagrant*
+*.sublime-project
+*.sublime-workspace
+.tmp*
+.importmagic.idx
+.vendor
+.lock-*
+.waf*
+*/xcuserdata/*

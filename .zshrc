@@ -1,12 +1,21 @@
 #!/bin/zsh
 
+ulimit -n 10000
+
 if [ -f /etc/profile ]; then
   . /etc/profile
 fi
 
-if [ -r ~/.zsh/zshrc.before ]; then
-  . ~/.zsh/zshrc.before
+if [ -r ~/.zsh/before.zshrc ]; then
+  . ~/.zsh/before.zshrc
 fi
+
+# Magically link PYTHONPATH to the ZSH array pythonpath
+typeset -T PYTHONPATH pythonpath
+# Remove duplicates
+typeset -U pythonpath path
+
+export PYTHONPATH pythonpath
 
 # Global aliases
 alias -g L='|less'
@@ -18,10 +27,14 @@ autoload complist
 # Use completion cache
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
-# Allow 
+# Allow
 zstyle ':completion:*' menu select=1
 
 export FPATH=~/.zsh/completion:$FPATH
+
+if [ -d ~/.cabal/bin ]; then
+  path+=~/.cabal/bin
+fi
 
 autoload colors zsh/terminfo
 colors
@@ -36,6 +49,8 @@ bindkey '\e^M' accept-and-menu-complete
 # The VI variants refuse to backspace over existing text. This is shit.
 bindkey '^?' backward-delete-char
 bindkey '^W' backward-kill-word
+bindkey '\M-b' backward-word
+bindkey '\M-f' forward-word
 # Ctrl-E to launch line editor
 autoload -U edit-command-line
 zle -N edit-command-line
@@ -43,7 +58,10 @@ bindkey '^E' edit-command-line
 # Insert the last word from the previous line.
 bindkey "^P" insert-last-word
 
-source ~/.zsh/plugins/git-flow-completion.zsh
+# ^W delete to / rather than space.
+#autoload -U select-word-style
+#select-word-style bash
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
 # Automatically quote meta-characters in URLs!
 autoload -U url-quote-magic
@@ -51,9 +69,11 @@ zle -N self-insert url-quote-magic
 
 unsetopt beep
 
-alias vi='vim -X'
+alias vi='nvim'
 alias ls='ls --color=auto -F --ignore="*.pyc" --ignore="*~"'
 alias less='less -R'
+alias u='cd "$(git rev-parse --show-toplevel)"'
+alias gore='gore -autoimport'
 
 # Set xterm title
 XTITLE="%n@%m:%~"
@@ -67,18 +87,12 @@ precmd() {
   # Collapse the prompt path components to all first characters except the
   # last.
   local DIR=${PWD//#$HOME/\~}
-  if [ $DIR != "~" -a $DIR != "/" ]; then
-    local BASE=$(basename $DIR)
-    DIR=$(dirname $DIR)
-    DIR=$(echo "$DIR" | sed -e 's#/\(.\)[^/]\+#/\1#g')
-    if [ -n $BASE ]; then
-        DIR=$DIR/$BASE
-    fi
-    DIR=${DIR//\/\///}
-  fi
-  psvar[1]=$DIR
-  psvar[2]=$#jobstates
-  test $psvar[2] -eq 0 && psvar[2]=()
+#  if [ $DIR != "~" -a $DIR != "/" ]; then
+#    DIR="$(echo "$DIR" | sed -e 's/[aeiou ]//g')"
+#  fi
+  psvar[1]="$DIR"
+  psvar[2]="$#jobstates"
+  test "$psvar[2]" -eq 0 && psvar[2]=()
 }
 
 PROMPT="%(2v:<+%2v>:)[%n@%B%m%b:%1v]"
@@ -151,6 +165,11 @@ preexec() {
   fi
 }
 
+# Make git completion not shithouse
+__git_files () {
+    _wanted files expl 'local files' _files
+}
+
 READNULLCMD=${PAGER:-/bin/less}
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
              /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
@@ -178,6 +197,6 @@ if [ -r ~/.zsh/$(uname).zshrc ]; then
   . ~/.zsh/$(uname).zshrc
 fi
 
-if [ -r ~/.zsh/zshrc.after ]; then
-  . ~/.zsh/zshrc.after
+if [ -r ~/.zsh/after.zshrc ]; then
+  . ~/.zsh/after.zshrc
 fi

@@ -1,5 +1,6 @@
 " Reset defaults
-set all&
+call pathogen#infect()
+" set all&
 
 if filereadable(expand('~/.vimrc.local'))
   so ~/.vimrc.local
@@ -22,6 +23,9 @@ cabbr <expr> %% expand('%:p:h')
 vmap Q gq
 nmap Q gqap
 
+" Turn off status line.
+set laststatus=0
+
 " Turn off annoying beeps
 set vb
 set noeb
@@ -31,6 +35,8 @@ set vb t_vb=
 let &background = "dark"
 
 set tags=tags;/
+
+set mouse=r
 
 " Force latin1 terminal encoding?
 set fileencoding=utf-8
@@ -72,12 +78,10 @@ set shortmess=aTI
 
 " Use insert key to toggle paste mode
 if has('gui_macvim')
-  set transparency=20
+  set transparency=30
   set pastetoggle=<Help>
   set guifont=Menlo:h12
   set antialias
-  " PeepOpen support
-  map <D-e> <Plug>PeepOpen
   " Open tags in new tabs
   nmap <C-]> <C-w><C-]><C-w>T
   " Disable scrollbar
@@ -175,8 +179,17 @@ set completeopt=menuone,longest
 " set autochdir
 
 " Configure syntastic code checking
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 1
 let g:syntastic_enable_highlighting=1
 let g:syntastic_enable_signs=0
+
 let g:syntastic_cpp_auto_refresh_includes = 1
 let g:syntastic_cpp_check_header = 1
 let g:syntastic_cpp_config_file = '.clang_complete'
@@ -184,6 +197,13 @@ let g:syntastic_cpp_remove_include_errors = 1
 let g:syntastic_mode_map = { 'mode': 'active',
       \ 'active_filetypes': [],
       \ 'passive_filetypes': ['scala'] }
+let g:syntastic_go_checkers = ['gometalinter']
+let g:syntastic_go_gometalinter_args = '--fast'
+
+let g:go_fmt_command = "goimports"
+let g:go_fmt_fail_silently = 1
+
+map <silent> <BS> :Dash<CR>
 
 " Clang complete configuration
 let g:clang_periodic_quickfix=0
@@ -221,7 +241,7 @@ let NERDTreeQuitOnOpen=1
 map <silent> <F2> :NERDTreeToggle<CR>
 
 " Toggle headers
-map <silent> <C-H> :FSHere<CR>
+"map <silent> <C-H> :FSHere<CR>
 map <silent> <C-X> :bd<CR>
 
 " Set colorscheme
@@ -242,5 +262,3 @@ map <silent> <C-J> <Leader>t
 
 " Jump to a symbol from the CScope database: eg. :Sym Nilsimsa
 command! -nargs=1 Sym cscope find g <args>
-
-call pathogen#infect()
