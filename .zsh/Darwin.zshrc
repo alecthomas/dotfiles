@@ -34,7 +34,7 @@ fi
 # Remove non-existant directories
 path=($^path(N))
 
-if [ -d ~/.go -a -z "$GOPATH" ]; then
+if [ -d ~/.go ]; then
   export GOPATH=~/.go
   path=(~/.go/bin $path)
 fi
@@ -68,3 +68,7 @@ f() {
 }
 
 export GITROOT=$HOME/development
+
+alias grep='ggrep'
+alias sed='gsed'
+alias find='gfind'

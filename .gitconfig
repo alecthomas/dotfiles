@@ -3,14 +3,17 @@
   diff = auto
   status = auto
 
+[status]
+  showUntrackedFiles = all
+
 [core]
   excludesfile = ~/.gitignorerc
   mergeoptions = --no-ff
-	editor = vim
-	autocrlf = input
-	ignorecase = false
+  editor = vim
+  autocrlf = input
+  ignorecase = false
 [user]
-	name = Alec Thomas
+  name = Alec Thomas
   email = alec@swapoff.org
 [sendemail]
   smtpserver = smtp.gmail.com
@@ -45,49 +48,62 @@
   exec = "!exec "
   mt = mergetool
   untracked = ls-files --others --exclude-standard
+  create-pull-request = !sh -c 'stash pull-request $0 $@'
 
 [branch]
   autosetupmerge = true
   autosetuprebase = always
+[rerere]
+  enabled = 1
+[rebase]
+  autosquash = true
 [giggle]
   main-window-maximized = false
   main-window-geometry = 1441x975+365+106
   history-view-vpane-position = 539
   main-window-view = HistoryView
   file-view-vpane-position = 346
+[diff]
+  renamse = true
 [push]
+  config = default
   default = current
+[pull]
+  rebase = true
 [mergetool "diffmerge"]
   cmd = diffmerge --merge --result=$MERGED $LOCAL $BASE $REMOTE
   trustExitCode = true
 [difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+  cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 [diff]
-	tool = Kaleidoscope
+  tool = Kaleidoscope
 [difftool]
-	prompt = false
+  prompt = false
 [mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
+  cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+  trustExitCode = true
 [mergetool]
-	prompt = false
+  prompt = false
 [merge]
-	tool = Kaleidoscope
+  tool = Kaleidoscope
+  summary = true
 [credential]
-	helper = osxkeychain
+  helper = osxkeychain
 [filter "media"]
-	required = true
-	clean = git media clean %f
-	smudge = git media smudge %f
+  required = true
+  clean = git media clean %f
+  smudge = git media smudge %f
 [filter "hawser"]
-	clean = git hawser clean %f
-	smudge = git hawser smudge %f
-	required = true
+  clean = git hawser clean %f
+  smudge = git hawser smudge %f
+  required = true
 [filter "lfs"]
-	clean = git lfs clean %f
-	smudge = git lfs smudge %f
-	required = true
+  clean = git lfs clean %f
+  smudge = git lfs smudge %f
+  required = true
 [github]
-	user = alecthomas
+  user = alecthomas
 [ghi]
-	token = !security find-internet-password -a alecthomas -s github.com -l 'ghi token' -w
+  token = !security find-internet-password -a alecthomas -s github.com -l 'ghi token' -w
+[http "https://gopkg.in"]
+  followRedirects = true

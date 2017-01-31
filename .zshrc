@@ -32,6 +32,8 @@ zstyle ':completion:*' menu select=1
 
 export FPATH=~/.zsh/completion:$FPATH
 
+export PYTHONDONTWRITEBYTECODE=1
+
 if [ -d ~/.cabal/bin ]; then
   path+=~/.cabal/bin
 fi
@@ -68,8 +70,8 @@ autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
 unsetopt beep
+setopt rm_star_silent
 
-alias vi='nvim'
 alias ls='ls --color=auto -F --ignore="*.pyc" --ignore="*~"'
 alias less='less -R'
 alias u='cd "$(git rev-parse --show-toplevel)"'
@@ -103,12 +105,13 @@ which ondir > /dev/null 2>&1
 HAVE_ONDIR=$?
 
 if [ $HAVE_TODO = 0 -o $HAVE_ONDIR = 0 ]; then
-    chpwd() {
+    alec_chpwd() {
       [ -t 1 ] || return
       [ $HAVE_TODO = 0 -a \( -r .todo -o -r .todo2 \) ] && todo2 --summary
       [ $HAVE_ONDIR = 0 ] && eval "`ondir \"$OLDPWD\" \"$PWD\"`"
     }
-    chpwd
+    chpwd_functions+=("alec_chpwd")
+    alec_chpwd
 fi
 
 
@@ -128,8 +131,8 @@ zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:match:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
 
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=100000
+SAVEHIST=500000
 HISTFILE=~/.zsh/history
 
 # ZSH options
@@ -185,7 +188,7 @@ compinit -d "${ZDOTDIR:-$HOME}/.zcompdumps/${HOST%%.*}-$ZSH_VERSION"
 
 # f <glob> [<path>]
 f() {
-  find ${2-.} ! -path '*/.git/*' ! -path '*/.venv*' ! -name '*.log*' -iname \*${1-\*}\*
+  find ${2-.} ! -path '*/.git/*' ! -path '*/.venv*' ! -name '*.log*' ! -name '*/.pants.*/*' -iname \*${1-\*}\*
 }
 
 # g <regex> [<path>]

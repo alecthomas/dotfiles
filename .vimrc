@@ -262,3 +262,6 @@ map <silent> <C-J> <Leader>t
 
 " Jump to a symbol from the CScope database: eg. :Sym Nilsimsa
 command! -nargs=1 Sym cscope find g <args>
+
+let g:neocomplete#sources#omni#functions = {'go': 'go#complete#Complete'}
+
