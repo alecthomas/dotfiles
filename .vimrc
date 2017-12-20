@@ -37,6 +37,7 @@ let &background = "dark"
 set tags=tags;/
 
 set mouse=r
+set visualbell
 
 " Force latin1 terminal encoding?
 set fileencoding=utf-8

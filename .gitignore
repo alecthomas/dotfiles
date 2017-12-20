@@ -68,3 +68,7 @@ node_modules
 nosetests.out
 tags
 zshrc.local
+.venv
+cache-stats/*
+starlog/dev_spools?/*
+.vscode/

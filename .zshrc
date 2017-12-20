@@ -186,15 +186,7 @@ autoload -U compinit
 [[ -d "${ZDOTDIR:-$HOME}/.zcompdumps" ]] || mkdir -m 0700 -p "${ZDOTDIR:-$HOME}/.zcompdumps"
 compinit -d "${ZDOTDIR:-$HOME}/.zcompdumps/${HOST%%.*}-$ZSH_VERSION"
 
-# f <glob> [<path>]
-f() {
-  find ${2-.} ! -path '*/.git/*' ! -path '*/.venv*' ! -name '*.log*' ! -name '*/.pants.*/*' -iname \*${1-\*}\*
-}
-
-# g <regex> [<path>]
-g() {
-  f \* ${2-.} | xargs -0 grep -iIE $1
-}
+#which fasd > /dev/null && eval "$(fasd --init auto)"
 
 if [ -r ~/.zsh/$(uname).zshrc ]; then
   . ~/.zsh/$(uname).zshrc

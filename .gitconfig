@@ -7,14 +7,15 @@
   showUntrackedFiles = all
 
 [core]
-  excludesfile = ~/.gitignorerc
   mergeoptions = --no-ff
   editor = vim
   autocrlf = input
   ignorecase = false
+	excludesfile = ~/.gitignore
+	trustctime = false
 [user]
-  name = Alec Thomas
-  email = alec@swapoff.org
+	name = Alec Thomas
+	email = alec@swapoff.org
 [sendemail]
   smtpserver = smtp.gmail.com
   smtpuser = alec@swapoff.org
@@ -36,9 +37,9 @@
   log = log --topo-order --first-parent --graph --decorate
   sl = log --format=oneline
   ds = diff --stat
-  dm = !git diff $(git merge-base master HEAD)
+  dm = !git diff $(git parent)
   do = diff origin
-  names = diff master --name-only
+  names = !git diff $(git parent) --name-only
   dms = diff master --stat
   l = log --graph --decorate --oneline
   la = log --graph --decorate --oneline --all
@@ -48,7 +49,6 @@
   exec = "!exec "
   mt = mergetool
   untracked = ls-files --others --exclude-standard
-  create-pull-request = !sh -c 'stash pull-request $0 $@'
 
 [branch]
   autosetupmerge = true
@@ -65,23 +65,23 @@
   file-view-vpane-position = 346
 [diff]
   renamse = true
+  word-diff = color
 [push]
   config = default
   default = current
+  followTags = true
 [pull]
   rebase = true
-[mergetool "diffmerge"]
-  cmd = diffmerge --merge --result=$MERGED $LOCAL $BASE $REMOTE
-  trustExitCode = true
 [difftool "Kaleidoscope"]
   cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+  trustExitCode = false
 [diff]
   tool = Kaleidoscope
 [difftool]
   prompt = false
 [mergetool "Kaleidoscope"]
   cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-  trustExitCode = true
+  trustExitCode = false
 [mergetool]
   prompt = false
 [merge]
@@ -98,12 +98,13 @@
   smudge = git hawser smudge %f
   required = true
 [filter "lfs"]
-  clean = git lfs clean %f
-  smudge = git lfs smudge %f
-  required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
 [github]
   user = alecthomas
 [ghi]
   token = !security find-internet-password -a alecthomas -s github.com -l 'ghi token' -w
-[http "https://gopkg.in"]
-  followRedirects = true
+#[http "https://gopkg.in"]
+#  followRedirects = true
